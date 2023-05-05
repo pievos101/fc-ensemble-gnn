@@ -1,0 +1,11 @@
+id: 1
+image: fc-ensemble-gnn
+createdat: 2023-05-05T20:39:01.380648007Z
+relayaddress: localhost
+queryinterval: 3
+dirs:
+- client1
+- client2
+- client3
+gendir: generic
+resultdir: /data/tests/results

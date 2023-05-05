@@ -1,0 +1,49 @@
+2023-05-05 20:39:08,018 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2023-05-05 20:39:08,019 INFO supervisord started with pid 7
+2023-05-05 20:39:09,021 INFO spawned: 'app' with pid 8
+2023-05-05 20:39:09,022 INFO spawned: 'nginx' with pid 9
+Starting app
+Bottle v0.12.25 server starting up (using WSGIRefServer())...
+Listening on http://localhost:5000/
+Hit Ctrl-C to quit.
+
+2023-05-05 20:39:10,313 INFO success: app entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2023-05-05 20:39:10,314 INFO success: nginx entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+[CTRL] POST /setup
+Received setup: 7b61caa1e80d7cb0 True ['2468d41ecfde5571', '7b61caa1e80d7cb0', '07a39288621335bd']
+Initializing
+Coordinator: True
+Read input
+127.0.0.1 - - [05/May/2023 20:39:29] "POST /api/setup HTTP/1.0" 200 0
+Local mean computation
+Local sum: 15
+Local mean: 3.0
+Global computation
+[CTRL] GET /status
+127.0.0.1 - - [05/May/2023 20:39:29] "GET /api/status HTTP/1.0" 200 39
+Global computation
+Global computation
+[CTRL] POST /data
+Process incoming data....
+127.0.0.1 - - [05/May/2023 20:39:31] "POST /api/data?client=07a39288621335bd HTTP/1.0" 200 0
+Global computation
+[CTRL] GET /status
+127.0.0.1 - - [05/May/2023 20:39:32] "GET /api/status HTTP/1.0" 200 39
+[CTRL] POST /data
+Process incoming data....
+127.0.0.1 - - [05/May/2023 20:39:32] "POST /api/data?client=2468d41ecfde5571 HTTP/1.0" 200 0
+Global computation
+[COORDINATOR] Broadcasting global mean to clients
+Writing results
+Finishing
+[CTRL] GET /status
+127.0.0.1 - - [05/May/2023 20:39:35] "GET /api/status HTTP/1.0" 200 38
+[CTRL] GET /data
+Process outgoing data...
+127.0.0.1 - - [05/May/2023 20:39:35] "GET /api/data HTTP/1.0" 200 241
+[CTRL] GET /status
+127.0.0.1 - - [05/May/2023 20:39:38] "GET /api/status HTTP/1.0" 200 39
+127.0.0.1 - - [05/May/2023 20:39:41] "GET /api/status HTTP/1.0" 200 39
+[CTRL] GET /status
+[CTRL] GET /status
+127.0.0.1 - - [05/May/2023 20:39:44] "GET /api/status HTTP/1.0" 200 38

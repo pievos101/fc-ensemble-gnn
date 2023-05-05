@@ -1,0 +1,191 @@
+{"component":"MAIN","instance":"","level":"info","msg":"Controller start","time":"2023-05-05T20:33:56Z"}
+{"component":"MAIN","instance":"","level":"info","msg":"Mode: Dockerized (isolated)","time":"2023-05-05T20:33:56Z"}
+{"component":"MAIN","instance":"","level":"info","msg":"Configuration value 'HasGPU': false","time":"2023-05-05T20:33:56Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Removing leftover Docker entities for label: fc-controller-label","time":"2023-05-05T20:33:56Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Removed 0 of 0 leftover containers","time":"2023-05-05T20:33:56Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Removed 10 of 10 leftover volumes","time":"2023-05-05T20:33:56Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Removed 0 of 1 leftover networks","time":"2023-05-05T20:33:56Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"Listening on port 9151","time":"2023-05-05T20:33:56Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"Listening on port 9150","time":"2023-05-05T20:33:56Z"}
+{"component":"FLOW","instance":"","level":"debug","msg":"1 projects","time":"2023-05-05T20:33:56Z"}
+{"component":"FLOW","instance":"13154","level":"info","msg":"Info change for project 13154: stage: init, step: 0","time":"2023-05-05T20:33:56Z"}
+{"component":"TESTBED","instance":"","level":"info","msg":"Create new test","time":"2023-05-05T20:34:12Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Create volumes and containers...","time":"2023-05-05T20:34:12Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Create volume test_1_input_0_1683318852","time":"2023-05-05T20:34:12Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Create volume test_1_output_0_1683318852","time":"2023-05-05T20:34:12Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Move data to workspace from /Users/christianhausleitner/Desktop/Studium/VerfassenWissenschaftlerArbeiten/fc-ensemble-gnn/data/data","time":"2023-05-05T20:34:12Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Move data to workspace","time":"2023-05-05T20:34:12Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:34:13Z"}
+{"component":"TESTBED","instance":"1","level":"error","msg":"Error response from daemon: invalid mount config for type \"bind\": bind source path does not exist: /host_mnt/Users/christianhausleitner/Desktop/Studium/VerfassenWissenschaftlerArbeiten/fc-ensemble-gnn/data/data","time":"2023-05-05T20:34:13Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Stopping test id: 1","time":"2023-05-05T20:34:13Z"}
+{"component":"TESTBED","instance":"","level":"info","msg":"Create new test","time":"2023-05-05T20:35:15Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Create volumes and containers...","time":"2023-05-05T20:35:15Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Create volume test_1_input_0_1683318915","time":"2023-05-05T20:35:15Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Create volume test_1_output_0_1683318915","time":"2023-05-05T20:35:15Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Move data to workspace from /Users/christianhausleitner/Desktop/Studium/VerfassenWissenschaftlerArbeiten/fc-ensemble-gnn/data/data","time":"2023-05-05T20:35:15Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Move data to workspace","time":"2023-05-05T20:35:15Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:35:15Z"}
+{"component":"TESTBED","instance":"1","level":"error","msg":"Error response from daemon: invalid mount config for type \"bind\": bind source path does not exist: /host_mnt/Users/christianhausleitner/Desktop/Studium/VerfassenWissenschaftlerArbeiten/fc-ensemble-gnn/data/data","time":"2023-05-05T20:35:15Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Stopping test id: 1","time":"2023-05-05T20:35:15Z"}
+{"component":"TESTBED","instance":"","level":"info","msg":"Create new test","time":"2023-05-05T20:38:05Z"}
+{"component":"CLI","instance":"","level":"info","msg":"Result directory changed to: /data/tests/results","time":"2023-05-05T20:38:05Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Create volumes and containers...","time":"2023-05-05T20:38:05Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Create volume test_1_input_0_1683319085","time":"2023-05-05T20:38:05Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Create volume test_1_output_0_1683319085","time":"2023-05-05T20:38:05Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Move data to workspace from /Users/christianhausleitner/Desktop/Studium/VerfassenWissenschaftlerArbeiten/fc-ensemble-gnn/data/client_1","time":"2023-05-05T20:38:05Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Move data to workspace","time":"2023-05-05T20:38:05Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:38:06Z"}
+{"component":"TESTBED","instance":"1","level":"error","msg":"Error response from daemon: invalid mount config for type \"bind\": bind source path does not exist: /host_mnt/Users/christianhausleitner/Desktop/Studium/VerfassenWissenschaftlerArbeiten/fc-ensemble-gnn/data/client_1","time":"2023-05-05T20:38:06Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Stopping test id: 1","time":"2023-05-05T20:38:06Z"}
+{"component":"TESTBED","instance":"","level":"info","msg":"Create new test","time":"2023-05-05T20:38:13Z"}
+{"component":"CLI","instance":"","level":"info","msg":"Result directory changed to: /data/tests/results","time":"2023-05-05T20:38:13Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Create volumes and containers...","time":"2023-05-05T20:38:13Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Create volume test_1_input_0_1683319093","time":"2023-05-05T20:38:13Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Create volume test_1_output_0_1683319093","time":"2023-05-05T20:38:13Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Move data to workspace from /Users/christianhausleitner/Desktop/Studium/VerfassenWissenschaftlerArbeiten/fc-ensemble-gnn/data/client_1","time":"2023-05-05T20:38:13Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Move data to workspace","time":"2023-05-05T20:38:13Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:38:14Z"}
+{"component":"TESTBED","instance":"1","level":"error","msg":"Error response from daemon: invalid mount config for type \"bind\": bind source path does not exist: /host_mnt/Users/christianhausleitner/Desktop/Studium/VerfassenWissenschaftlerArbeiten/fc-ensemble-gnn/data/client_1","time":"2023-05-05T20:38:14Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Stopping test id: 1","time":"2023-05-05T20:38:14Z"}
+{"component":"TESTBED","instance":"","level":"info","msg":"Create new test","time":"2023-05-05T20:39:01Z"}
+{"component":"CLI","instance":"","level":"info","msg":"Result directory changed to: /data/tests/results","time":"2023-05-05T20:39:01Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Create volumes and containers...","time":"2023-05-05T20:39:01Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Create volume test_1_input_0_1683319141","time":"2023-05-05T20:39:01Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Create volume test_1_output_0_1683319141","time":"2023-05-05T20:39:01Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Move data to workspace from /Users/christianhausleitner/Desktop/Studium/VerfassenWissenschaftlerArbeiten/fc-ensemble-gnn/data/client1","time":"2023-05-05T20:39:01Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Move data to workspace","time":"2023-05-05T20:39:01Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:39:02Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Remove application","time":"2023-05-05T20:39:03Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Intermediary container used for moving data from host to volume has been removed","time":"2023-05-05T20:39:04Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Move generic data to input volume from /Users/christianhausleitner/Desktop/Studium/VerfassenWissenschaftlerArbeiten/fc-ensemble-gnn/data/generic","time":"2023-05-05T20:39:04Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Move data to workspace","time":"2023-05-05T20:39:04Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:39:05Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Remove application","time":"2023-05-05T20:39:06Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Intermediary container used for moving data from host to volume has been removed","time":"2023-05-05T20:39:07Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Start application","time":"2023-05-05T20:39:07Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:39:07Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Append app to list","time":"2023-05-05T20:39:08Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Create volume test_1_input_1_1683319148","time":"2023-05-05T20:39:08Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Create volume test_1_output_1_1683319148","time":"2023-05-05T20:39:08Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Move data to workspace from /Users/christianhausleitner/Desktop/Studium/VerfassenWissenschaftlerArbeiten/fc-ensemble-gnn/data/client2","time":"2023-05-05T20:39:08Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Move data to workspace","time":"2023-05-05T20:39:08Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:39:09Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Remove application","time":"2023-05-05T20:39:10Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Intermediary container used for moving data from host to volume has been removed","time":"2023-05-05T20:39:11Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Move generic data to input volume from /Users/christianhausleitner/Desktop/Studium/VerfassenWissenschaftlerArbeiten/fc-ensemble-gnn/data/generic","time":"2023-05-05T20:39:11Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Move data to workspace","time":"2023-05-05T20:39:11Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:39:17Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Remove application","time":"2023-05-05T20:39:18Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Intermediary container used for moving data from host to volume has been removed","time":"2023-05-05T20:39:19Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Start application","time":"2023-05-05T20:39:19Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:39:19Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Append app to list","time":"2023-05-05T20:39:21Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Create volume test_1_input_2_1683319161","time":"2023-05-05T20:39:21Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Create volume test_1_output_2_1683319161","time":"2023-05-05T20:39:21Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Move data to workspace from /Users/christianhausleitner/Desktop/Studium/VerfassenWissenschaftlerArbeiten/fc-ensemble-gnn/data/client3","time":"2023-05-05T20:39:21Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Move data to workspace","time":"2023-05-05T20:39:21Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:39:21Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Remove application","time":"2023-05-05T20:39:23Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Intermediary container used for moving data from host to volume has been removed","time":"2023-05-05T20:39:24Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Move generic data to input volume from /Users/christianhausleitner/Desktop/Studium/VerfassenWissenschaftlerArbeiten/fc-ensemble-gnn/data/generic","time":"2023-05-05T20:39:24Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Move data to workspace","time":"2023-05-05T20:39:24Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:39:24Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Remove application","time":"2023-05-05T20:39:26Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Intermediary container used for moving data from host to volume has been removed","time":"2023-05-05T20:39:27Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Start application","time":"2023-05-05T20:39:27Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:39:27Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Append app to list","time":"2023-05-05T20:39:28Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Link fc_fcensemblegnn_669970385 with global socket server","time":"2023-05-05T20:39:28Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Link fc_fcensemblegnn_955643168 with global socket server","time":"2023-05-05T20:39:28Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Start local socket server","time":"2023-05-05T20:39:28Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Link fc_fcensemblegnn_237601921 with global socket server","time":"2023-05-05T20:39:28Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Start local socket server","time":"2023-05-05T20:39:28Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Start local socket server","time":"2023-05-05T20:39:28Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Link to global address","time":"2023-05-05T20:39:28Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Link to global address","time":"2023-05-05T20:39:28Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Link to global address","time":"2023-05-05T20:39:28Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"Registered new participant controller","time":"2023-05-05T20:39:28Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"Registered new participant controller","time":"2023-05-05T20:39:28Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"Registered new coordinator controller","time":"2023-05-05T20:39:28Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"Received setup trigger","time":"2023-05-05T20:39:28Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"Received setup trigger","time":"2023-05-05T20:39:28Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"Received setup trigger","time":"2023-05-05T20:39:28Z"}
+{"component":"LOCAL","instance":"","level":"error","msg":"Got error during setup to http://172.18.0.5:9000: Post \"http://172.18.0.5:9000/setup\": dial tcp 172.18.0.5:9000: connect: connection refused","time":"2023-05-05T20:39:28Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"Setup 8bd31d8b87cf4e137579c0e005461adc4ca11df6940d8def3d9a0ca31bc020a9","time":"2023-05-05T20:39:29Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Setup triggered","time":"2023-05-05T20:39:29Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"3 apps and server created and running","time":"2023-05-05T20:39:29Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"http://172.18.0.5:9000/status: New data available","time":"2023-05-05T20:39:31Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"Mode: plain","time":"2023-05-05T20:39:31Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"[GLOBAL] Participant (ID: 07a39288621335bd) sending 241 bytes to Coordinator","time":"2023-05-05T20:39:31Z"}
+{"component":"LOCAL","instance":"","level":"debug","msg":"http://172.18.0.5:9000/data: Fetched 241 bytes","time":"2023-05-05T20:39:31Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"received 241 bytes from Client 07a39288621335bd","time":"2023-05-05T20:39:31Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"POST to http://172.18.0.3:9000/data?client=07a39288621335bd [Try 1/3]","time":"2023-05-05T20:39:31Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"http://172.18.0.4:9000/status: New data available","time":"2023-05-05T20:39:32Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"Mode: plain","time":"2023-05-05T20:39:32Z"}
+{"component":"LOCAL","instance":"","level":"debug","msg":"http://172.18.0.4:9000/data: Fetched 241 bytes","time":"2023-05-05T20:39:32Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"[GLOBAL] Participant (ID: 2468d41ecfde5571) sending 241 bytes to Coordinator","time":"2023-05-05T20:39:32Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"received 241 bytes from Client 2468d41ecfde5571","time":"2023-05-05T20:39:32Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"POST to http://172.18.0.3:9000/data?client=2468d41ecfde5571 [Try 1/3]","time":"2023-05-05T20:39:32Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"http://172.18.0.3:9000/status: New data available","time":"2023-05-05T20:39:35Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"Mode: plain","time":"2023-05-05T20:39:35Z"}
+{"component":"LOCAL","instance":"","level":"debug","msg":"http://172.18.0.3:9000/data: Fetched 241 bytes","time":"2023-05-05T20:39:35Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"Coordinator (ID: 7b61caa1e80d7cb0) broadcasting 241 bytes","time":"2023-05-05T20:39:35Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"received 241 bytes from Client 7b61caa1e80d7cb0","time":"2023-05-05T20:39:35Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"received 241 bytes from Client 7b61caa1e80d7cb0","time":"2023-05-05T20:39:35Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"POST to http://172.18.0.4:9000/data?client=7b61caa1e80d7cb0 [Try 1/3]","time":"2023-05-05T20:39:35Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"POST to http://172.18.0.5:9000/data?client=7b61caa1e80d7cb0 [Try 1/3]","time":"2023-05-05T20:39:35Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"http://172.18.0.5:9000/status: Finished","time":"2023-05-05T20:39:37Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"[GLOBAL] Participant (ID: 07a39288621335bd) finished the current step","time":"2023-05-05T20:39:37Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"http://172.18.0.4:9000/status: Finished","time":"2023-05-05T20:39:38Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"[GLOBAL] Participant (ID: 2468d41ecfde5571) finished the current step","time":"2023-05-05T20:39:38Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"http://172.18.0.5:9000/status: Finished","time":"2023-05-05T20:39:40Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"[GLOBAL] Participant (ID: 07a39288621335bd) finished the current step","time":"2023-05-05T20:39:40Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"http://172.18.0.4:9000/status: Finished","time":"2023-05-05T20:39:41Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"[GLOBAL] Participant (ID: 2468d41ecfde5571) finished the current step","time":"2023-05-05T20:39:41Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"http://172.18.0.5:9000/status: Finished","time":"2023-05-05T20:39:43Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"[GLOBAL] Participant (ID: 07a39288621335bd) finished the current step","time":"2023-05-05T20:39:43Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"http://172.18.0.3:9000/status: Finished","time":"2023-05-05T20:39:44Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"http://172.18.0.4:9000/status: Finished","time":"2023-05-05T20:39:44Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"[GLOBAL] Participant (ID: 7b61caa1e80d7cb0) finished the current step","time":"2023-05-05T20:39:44Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"[GLOBAL] Participant (ID: 2468d41ecfde5571) finished the current step","time":"2023-05-05T20:39:44Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"Shutdown","time":"2023-05-05T20:39:44Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Stopping test id: 1","time":"2023-05-05T20:39:44Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Stopping container fc_fcensemblegnn_669970385","time":"2023-05-05T20:39:44Z"}
+{"component":"GLOBAL","instance":"","level":"error","msg":"Participant (ID: 7b61caa1e80d7cb0): relaying stopped due to: EOF","time":"2023-05-05T20:39:44Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Move data to host","time":"2023-05-05T20:39:44Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:39:45Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"http://172.18.0.5:9000/status: Finished","time":"2023-05-05T20:39:46Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"[GLOBAL] Participant (ID: 07a39288621335bd) finished the current step","time":"2023-05-05T20:39:46Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Remove application","time":"2023-05-05T20:39:46Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"http://172.18.0.4:9000/status: Finished","time":"2023-05-05T20:39:47Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"[GLOBAL] Participant (ID: 2468d41ecfde5571) finished the current step","time":"2023-05-05T20:39:47Z"}
+{"component":"DOCKER","instance":"","level":"debug","msg":"Intermediary container used for moving data from volume to host has been removed","time":"2023-05-05T20:39:47Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Saved output volume content to /data/tests/results/results_test_1_client_0_fc_fcensemblegnn_669970385.zip","time":"2023-05-05T20:39:47Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Remove volume test_1_output_0_1683319141","time":"2023-05-05T20:39:47Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Deleted volume test_1_output_0_1683319141","time":"2023-05-05T20:39:47Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Remove volume test_1_input_0_1683319141","time":"2023-05-05T20:39:47Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Deleted volume test_1_input_0_1683319141","time":"2023-05-05T20:39:47Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Stopping container fc_fcensemblegnn_955643168","time":"2023-05-05T20:39:47Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Move data to host","time":"2023-05-05T20:39:47Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:39:48Z"}
+{"component":"LOCAL","instance":"","level":"info","msg":"http://172.18.0.5:9000/status: Finished","time":"2023-05-05T20:39:49Z"}
+{"component":"GLOBAL","instance":"","level":"info","msg":"[GLOBAL] Participant (ID: 07a39288621335bd) finished the current step","time":"2023-05-05T20:39:49Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Remove application","time":"2023-05-05T20:39:49Z"}
+{"component":"DOCKER","instance":"","level":"debug","msg":"Intermediary container used for moving data from volume to host has been removed","time":"2023-05-05T20:39:50Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Saved output volume content to /data/tests/results/results_test_1_client_1_fc_fcensemblegnn_955643168.zip","time":"2023-05-05T20:39:50Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Remove volume test_1_output_1_1683319148","time":"2023-05-05T20:39:50Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Deleted volume test_1_output_1_1683319148","time":"2023-05-05T20:39:50Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Remove volume test_1_input_1_1683319148","time":"2023-05-05T20:39:50Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Deleted volume test_1_input_1_1683319148","time":"2023-05-05T20:39:50Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Stopping container fc_fcensemblegnn_237601921","time":"2023-05-05T20:39:50Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Move data to host","time":"2023-05-05T20:39:50Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Attach to internal network","time":"2023-05-05T20:39:51Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Remove application","time":"2023-05-05T20:39:52Z"}
+{"component":"DOCKER","instance":"","level":"debug","msg":"Intermediary container used for moving data from volume to host has been removed","time":"2023-05-05T20:39:53Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Saved output volume content to /data/tests/results/results_test_1_client_2_fc_fcensemblegnn_237601921.zip","time":"2023-05-05T20:39:53Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Remove volume test_1_output_2_1683319161","time":"2023-05-05T20:39:53Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Deleted volume test_1_output_2_1683319161","time":"2023-05-05T20:39:53Z"}
+{"component":"DOCKER","instance":"","level":"info","msg":"Remove volume test_1_input_2_1683319161","time":"2023-05-05T20:39:53Z"}
+{"component":"TESTBED","instance":"1","level":"info","msg":"Deleted volume test_1_input_2_1683319161","time":"2023-05-05T20:39:53Z"}
+{"component":"LOCAL","instance":"","level":"error","msg":"Get \"http://172.18.0.4:9000/status\": dial tcp 172.18.0.4:9000: i/o timeout","time":"2023-05-05T20:40:20Z"}
+{"component":"LOCAL","instance":"","level":"error","msg":"Get \"http://172.18.0.5:9000/status\": dial tcp 172.18.0.5:9000: i/o timeout","time":"2023-05-05T20:40:22Z"}
