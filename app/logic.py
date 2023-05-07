@@ -9,7 +9,7 @@ from app.algo import Coordinator, Client
 
 
 class AppLogic:
-
+    # TODO: Implement the ensemble logic here by replacing the distributed mean logic
     def __init__(self):
         # === Status of this app instance ===
 
@@ -75,7 +75,7 @@ class AppLogic:
         # === States ===
         state_initializing = 1
         state_read_input = 2
-        state_local_computation = 6
+        state_training_local_model = 6
         state_wait_for_aggregation = 7
         state_global_aggregation = 8
         state_writing_results = 9
@@ -100,15 +100,15 @@ class AppLogic:
                 print("Read input", flush=True)
                 self.progress = 'read input'
                 self.read_config()
-                self.client.read_input(self.INPUT_DIR + '/' + self.input_name)
-                state = state_local_computation
+                self.client.readInputData(self.INPUT_DIR + '/' + self.input_name)
+                state = state_training_local_model
 
-            if state == state_local_computation:
-                print("Local mean computation", flush=True)
-                self.progress = 'local computation'
-                self.client.compute_local_mean()
+            if state == state_training_local_model:
+                print("Local training with feature set", flush=True)
+                self.progress = 'local training'
+                self.client.trainClient()
 
-                data_to_send = jsonpickle.encode(self.client.local_mean)
+                data_to_send = jsonpickle.encode(self.client.prediction_model)
 
                 if self.coordinator:
                     self.data_incoming.append(data_to_send)
@@ -117,16 +117,16 @@ class AppLogic:
                     self.data_outgoing = data_to_send
                     self.status_available = True
                     state = state_wait_for_aggregation
-                    print(f'[CLIENT] Sending local mean data to coordinator', flush=True)
+                    print(f'[CLIENT] Sending local prediction model to coordinator', flush=True)
 
             if state == state_wait_for_aggregation:
                 print("Wait for aggregation", flush=True)
                 self.progress = 'wait for aggregation'
                 if len(self.data_incoming) > 0:
-                    print("Received global mean from coordinator.", flush=True)
-                    global_mean = jsonpickle.decode(self.data_incoming[0])
+                    print("Received global prediction model from coordinator.", flush=True)
+                    global_prediction_model = jsonpickle.decode(self.data_incoming[0])
                     self.data_incoming = []
-                    self.client.set_global_mean(global_mean)
+                    self.client.global_model = global_prediction_model
                     state = state_writing_results
 
             # GLOBAL PART
@@ -134,20 +134,20 @@ class AppLogic:
                 print("Global computation", flush=True)
                 self.progress = 'global aggregation...'
                 if len(self.data_incoming) == len(self.clients):
-                    local_means = [jsonpickle.decode(client_data) for client_data in self.data_incoming]
+                    local_prediction_models = [jsonpickle.decode(client_data) for client_data in self.data_incoming]
                     self.data_incoming = []
-                    global_mean = self.client.compute_global_mean(local_means)
-                    self.client.set_global_mean(global_mean)
-                    data_to_broadcast = jsonpickle.encode(global_mean)
+                    self.coordinator.aggregate_local_models(local_prediction_models)
+                    self.client.global_model = self.coordinator.global_model
+                    data_to_broadcast = jsonpickle.encode(self.coordinator.global_model)
                     self.data_outgoing = data_to_broadcast
                     self.status_available = True
                     state = state_writing_results
-                    print(f'[COORDINATOR] Broadcasting global mean to clients', flush=True)
+                    print(f'[COORDINATOR] Broadcasting global_model to clients', flush=True)
 
             if state == state_writing_results:
                 print("Writing results", flush=True)
                 # now you can save it to a file
-                self.client.write_results(self.OUTPUT_DIR + '/' + self.output_name)
+                self.client.storeGlobalModelOnClient(self.OUTPUT_DIR + '/' + self.output_name)
                 state = state_finishing
 
             if state == state_finishing:
