@@ -1,5 +1,4 @@
 import jsonpickle
-import pandas as pd
 import threading
 import time
 import yaml
@@ -9,7 +8,6 @@ from app.algo import Coordinator, Client
 
 
 class AppLogic:
-    # TODO: Implement the ensemble logic here by replacing the distributed mean logic
     def __init__(self):
         # === Status of this app instance ===
 
@@ -41,6 +39,11 @@ class AppLogic:
 
         self.client = None
 
+        # === input files ===
+        self.input_features_name = None
+        self.input_ppi_name = None
+        self.output_global_name = None
+
     def handle_setup(self, client_id, coordinator, clients):
         # This method is called once upon startup and contains information about the execution context of this instance
         self.id = client_id
@@ -64,9 +67,10 @@ class AppLogic:
 
     def read_config(self):
         with open(self.INPUT_DIR + '/config.yml') as f:
-            config = yaml.load(f, Loader=yaml.FullLoader)['fc_mean']
-            self.input_name = config['input_name']
-            self.output_name = config['output_name']
+            config = yaml.load(f, Loader=yaml.FullLoader)['fc_ensemble_gnn']
+            self.input_features_name = config['input_features_name']
+            self.input_ppi_name = config['input_ppi_name']
+            self.output_global_name = config['output_global_name']
         shutil.copyfile(self.INPUT_DIR + "/config.yml", self.OUTPUT_DIR + "/config.yml")
 
     def app_flow(self):
@@ -100,20 +104,23 @@ class AppLogic:
                 print("Read input", flush=True)
                 self.progress = 'read input'
                 self.read_config()
-                self.client.readInputData(self.INPUT_DIR + '/' + self.input_name)
+                input_dir_path = self.INPUT_DIR + '/'
+                self.client.readInputDataAndSetupSubNet(input_dir_path, input_dir_path + self.input_ppi_name,
+                                                        input_dir_path + self.input_features_name,
+                                                        input_dir_path + self.output_global_name)
                 state = state_training_local_model
 
             if state == state_training_local_model:
                 print("Local training with feature set", flush=True)
-                self.progress = 'local training'
-                self.client.trainClient()
-
-                data_to_send = jsonpickle.encode(self.client.prediction_model)
+                self.progress = 'clients local training'
 
                 if self.coordinator:
-                    self.data_incoming.append(data_to_send)
+                    # do nothing?
                     state = state_global_aggregation
                 else:
+                    self.client.splitSubNetIntoTrainAndTest(0.8)
+                    self.client.trainClient()
+                    data_to_send = jsonpickle.encode(self.client.local_model)
                     self.data_outgoing = data_to_send
                     self.status_available = True
                     state = state_wait_for_aggregation
@@ -126,7 +133,7 @@ class AppLogic:
                     print("Received global prediction model from coordinator.", flush=True)
                     global_prediction_model = jsonpickle.decode(self.data_incoming[0])
                     self.data_incoming = []
-                    self.client.global_model = global_prediction_model
+                    self.client.saveGlobalModel(global_prediction_model)
                     state = state_writing_results
 
             # GLOBAL PART
@@ -147,7 +154,7 @@ class AppLogic:
             if state == state_writing_results:
                 print("Writing results", flush=True)
                 # now you can save it to a file
-                self.client.storeGlobalModelOnClient(self.OUTPUT_DIR + '/' + self.output_name)
+                self.client.testGlobalModelWithTestData()
                 state = state_finishing
 
             if state == state_finishing:
