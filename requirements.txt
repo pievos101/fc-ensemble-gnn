@@ -5,7 +5,6 @@ pyyaml
 pandas
 scikit-learn
 
-torch
 torchvision
 torch-geometric
 torch-scatter
