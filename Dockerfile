@@ -7,6 +7,10 @@ RUN pip3 install --upgrade pip
 
 COPY requirements.txt ./requirements.txt
 RUN pip3 install -r ./requirements.txt
+RUN git clone https://github.com/pievos101/Ensemble-GNN.git
+RUN git clone https://github.com/pievos101/GNN-SubNet.git
+RUN pip install GNN-SubNet/
+RUN pip install Ensemble-GNN/
 
 COPY server_config/supervisord.conf /supervisord.conf
 COPY server_config/nginx /etc/nginx/sites-available/default

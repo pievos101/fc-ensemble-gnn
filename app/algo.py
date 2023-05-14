@@ -19,8 +19,8 @@ class Client:
         pass
 
     def readInputDataAndSetupSubNet(self, data_root_path: str, ppi_file_name: str, feats_file_name: str,
-                                    output_file_name: str):
-        self.g = gnn.GNNSubNet(data_root_path, ppi_file_name, feats_file_name, output_file_name)
+                                    target_file_name: str):
+        self.g = gnn.GNNSubNet(data_root_path, ppi_file_name, feats_file_name, target_file_name)
 
     def splitSubNetIntoTrainAndTest(self, train_ratio: float):
         self.g_train, self.g_test = egnn.split(self.g, train_ratio)
@@ -32,7 +32,7 @@ class Client:
         self.local_model.train()
         # self.prediction_model.grow(10) # greedy step
 
-    def checkClientPerformance(self):
+    def checkClientPerformance(self, output_dir_path: str = None):
         # Lets check the client-specific performances
         p_predicted_class = self.local_model.predict(self.g_test)
         acc = accuracy_score(self.g_test.true_class, p_predicted_class)
@@ -45,10 +45,20 @@ class Client:
         print("\n-----------")
         print(f'NMI of ensemble classifier:', nmi)
 
+        if output_dir_path:
+            # save the values to a file
+            with open(output_dir_path + '/client_performance.txt', 'w') as f:
+                f.write(f'Balanced accuracy of ensemble classifier: {acc_bal}\n')
+                f.write(f'Accuracy of ensemble classifier: {acc}\n')
+                f.write(f'NMI of ensemble classifier: {nmi}\n')
+                f.close()
+
+
+
     def saveGlobalModel(self, global_model):
         self.global_model = global_model
 
-    def testGlobalModelWithTestData(self):
+    def testGlobalModelWithTestData(self, output_dir_path: str = None):
         # Make predictions using the global model via Majority Vote
         predicted_class = self.global_model.predict(self.g_test)
         # Lets check the performance of the federated ensemble classifier
@@ -61,6 +71,14 @@ class Client:
 
         print("\n-----------")
         print("NMI of global ensemble classifier:", nmi)
+
+        if output_dir_path:
+            # save the values to a file
+            with open(output_dir_path + '/global_model_performance.txt', 'w') as f:
+                f.write(f'Balanced accuracy of ensemble classifier: {acc_bal}\n')
+                f.write(f'Accuracy of ensemble classifier: {acc}\n')
+                f.write(f'NMI of ensemble classifier: {nmi}\n')
+                f.close()
 
 class Coordinator(Client):
     global_model: egnn.ensemble = None

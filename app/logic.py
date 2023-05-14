@@ -42,7 +42,7 @@ class AppLogic:
         # === input files ===
         self.input_features_name = None
         self.input_ppi_name = None
-        self.output_global_name = None
+        self.input_target_name = None
 
     def handle_setup(self, client_id, coordinator, clients):
         # This method is called once upon startup and contains information about the execution context of this instance
@@ -70,7 +70,7 @@ class AppLogic:
             config = yaml.load(f, Loader=yaml.FullLoader)['fc_ensemble_gnn']
             self.input_features_name = config['input_features_name']
             self.input_ppi_name = config['input_ppi_name']
-            self.output_global_name = config['output_global_name']
+            self.input_target_name = config['input_target_name']
         shutil.copyfile(self.INPUT_DIR + "/config.yml", self.OUTPUT_DIR + "/config.yml")
 
     def app_flow(self):
@@ -95,10 +95,12 @@ class AppLogic:
                 if self.id is not None:  # Test if setup has happened already
                     print(f'Coordinator: {self.coordinator}', flush=True)
                     if self.coordinator:
+                        # the coordinator has nothing to do except waiting for the data
                         self.client = Coordinator()
+                        state = state_global_aggregation
                     else:
                         self.client = Client()
-                    state = state_read_input
+                        state = state_read_input
 
             if state == state_read_input:
                 print("Read input", flush=True)
@@ -107,12 +109,12 @@ class AppLogic:
                 input_dir_path = self.INPUT_DIR + '/'
                 self.client.readInputDataAndSetupSubNet(input_dir_path, input_dir_path + self.input_ppi_name,
                                                         input_dir_path + self.input_features_name,
-                                                        input_dir_path + self.output_global_name)
+                                                        input_dir_path + self.input_target_name)
                 state = state_training_local_model
 
             if state == state_training_local_model:
                 print("Local training with feature set", flush=True)
-                self.progress = 'clients local training'
+                self.progress = 'client local training'
 
                 if self.coordinator:
                     # do nothing?
@@ -120,6 +122,7 @@ class AppLogic:
                 else:
                     self.client.splitSubNetIntoTrainAndTest(0.8)
                     self.client.trainClient()
+                    self.client.checkClientPerformance()
                     data_to_send = jsonpickle.encode(self.client.local_model)
                     self.data_outgoing = data_to_send
                     self.status_available = True

@@ -5,10 +5,8 @@ pyyaml
 pandas
 scikit-learn
 
-torch==1.11.0
-torchvision==0.12.0
-torch-geometric==2.0.4
-torch-scatter==2.0.9
-torch-sparse==0.6.13
-GNN-SubNet/
-Ensemble-GNN/
+torch
+torchvision
+torch-geometric
+torch-scatter
+torch-sparse
