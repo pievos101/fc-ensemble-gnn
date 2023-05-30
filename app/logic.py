@@ -138,11 +138,18 @@ class AppLogic:
                 self.client.splitSubNetIntoTrainAndTest(0.8)
                 self.client.trainClient()
                 self.client.checkClientPerformance()
-                data_to_send = jsonpickle.encode(self.client.local_model)
+                data_to_send = jsonpickle.encode(self.client.local_model, keys=True)
+
+                print(f'[CLIENT] Sending local prediction model to coordinator', flush=True)
+                local_model_path = os.path.join(self.OUTPUT_DIR, 'local_model.json')
+                with open(local_model_path, 'wb') as f:
+                    #convert to bytes
+                    f.write(bytes(data_to_send, 'utf-8'))
+
+                print(f'[CLIENT] Sending local prediction model to coordinator', flush=True)
                 self.data_outgoing = data_to_send
                 self.status_available = True
                 state = state_wait_for_aggregation
-                print(f'[CLIENT] Sending local prediction model to coordinator', flush=True)
 
             if state == state_wait_for_aggregation:
                 print("Wait for aggregation", flush=True)
@@ -150,12 +157,11 @@ class AppLogic:
                 if len(self.data_incoming) > 0:
                     print("Received global prediction model from coordinator.", flush=True)
                     global_prediction_model = jsonpickle.decode(self.data_incoming[0])
-                    print("Global prediction model:", self.data_incoming, flush=True)
                     self.client.saveGlobalModel(global_prediction_model)
                     # create a json file to store the global model
                     global_model_path = os.path.join(self.OUTPUT_DIR, 'global_model.json')
                     with open(global_model_path, 'wb') as f:
-                        f.write(self.data_incoming[0])
+                        f.write(bytes(self.data_incoming[0], 'utf-8'))
                     state = state_writing_results
                     self.data_incoming = []
 
@@ -166,15 +172,23 @@ class AppLogic:
                 # clients.length -1 because the coordinator is also in the list of clients
                 if len(self.data_incoming) == len(self.clientIds) - 1:
                     print("Received all local prediction models from clients.", flush=True)
-                    print("Local prediction models:", self.data_incoming, flush=True)
-                    local_prediction_models = [jsonpickle.decode(client_data) for client_data in self.data_incoming]
+                    print("Local prediction model count:", len(self.data_incoming), flush=True)
+                    # decode the local prediction models and store them in a list
+                    local_prediction_models = []
+                    for local_prediction_model in self.data_incoming:
+                        try:
+                            local_prediction_models.append(jsonpickle.decode(local_prediction_model, keys=True))
+                        except Exception as e:
+                            print("Error while decoding local prediction model", flush=True)
+                            print(e, flush=True)
                     self.data_incoming = []
                     self.coordinator.aggregateClientModels(local_prediction_models)
                     self.coordinator.global_model = self.coordinator.global_model
                     data_to_broadcast = jsonpickle.encode(self.coordinator.global_model)
                     self.data_outgoing = data_to_broadcast
                     self.status_available = True
-                    state = state_writing_results
+                    # after broadcasting the global model, the coordinator is finished
+                    state = state_finishing
                     print(f'[COORDINATOR] Broadcasting global_model to clients', flush=True)
 
             if state == state_writing_results:

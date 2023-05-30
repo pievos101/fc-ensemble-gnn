@@ -23,7 +23,7 @@ def ctrl_setup():
 
 @api_server.get('/status')
 def ctrl_status():
-    print(f'[CTRL] GET /status', flush=True)
+    print(f'[CTRL] GET /status [available, finished]:', f" [{logic.status_available},{logic.status_finished}]", flush=True)
     return json.dumps({
         'available': logic.status_available,
         'finished': logic.status_finished,
