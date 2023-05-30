@@ -18,9 +18,9 @@ class Client:
     def __init__(self):
         pass
 
-    def readInputDataAndSetupSubNet(self, data_root_path: str, ppi_file_name: str, feats_file_name: str,
-                                    target_file_name: str):
-        self.g = gnn.GNNSubNet(data_root_path, ppi_file_name, feats_file_name, target_file_name)
+    def readInputDataAndSetupSubNet(self, data_write_path: str, ppi_file_path: str, feats_file_path: list[str],
+                                    target_file_path: str):
+        self.g = gnn.GNNSubNet(data_write_path, ppi_file_path, feats_file_path, target_file_path)
 
     def splitSubNetIntoTrainAndTest(self, train_ratio: float):
         self.g_train, self.g_test = egnn.split(self.g, train_ratio)
@@ -55,8 +55,9 @@ class Client:
 
 
 
-    def saveGlobalModel(self, global_model):
+    def saveGlobalModel(self, global_model:egnn.ensemble):
         self.global_model = global_model
+
 
     def testGlobalModelWithTestData(self, output_dir_path: str = None):
         # Make predictions using the global model via Majority Vote
@@ -80,10 +81,12 @@ class Client:
                 f.write(f'NMI of ensemble classifier: {nmi}\n')
                 f.close()
 
+
 class Coordinator(Client):
     global_model: egnn.ensemble = None
 
-    def aggregateModels(self, clients):
+    def aggregateClientModels(self, client_models: list[egnn.ensemble]):
         # aggregate the models from each client
         # without sharing any data
-        self.global_model = egnn.aggregate(clients)
+        self.global_model = egnn.aggregate(client_models)
+

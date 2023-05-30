@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build . --tag featurecloud.ai/fc_mean_app
+docker build . --tag fc-ensemble-gnn
