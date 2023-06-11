@@ -1,4 +1,0 @@
-fc_ensemble_gnn:
-    input_features_name: "KIDNEY_RANDOM_mRNA_FEATURES.txt"
-    input_ppi_name: "KIDNEY_RANDOM_PPI.txt"
-    input_target_name: "KIDNEY_RANDOM_TARGET.txt"

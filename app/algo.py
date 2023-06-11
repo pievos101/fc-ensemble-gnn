@@ -8,6 +8,7 @@ from sklearn.metrics.cluster import normalized_mutual_info_score
 
 from GNNSubNet.GNNSubNet import GNNSubNet
 
+
 class Client:
     local_model: egnn.ensemble = None
     global_model: egnn.ensemble = None

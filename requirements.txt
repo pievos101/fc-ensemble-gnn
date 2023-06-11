@@ -1,6 +1,7 @@
+featurecloud
 bottle
+bios
 numpy
-jsonpickle
 pyyaml
 pandas==1.5.1
 scikit-learn
