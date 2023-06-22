@@ -5,7 +5,7 @@ import ensemble_gnn as egnn
 from sklearn.metrics import balanced_accuracy_score
 from sklearn.metrics import accuracy_score
 from sklearn.metrics.cluster import normalized_mutual_info_score
-
+from pickle import dump
 from GNNSubNet.GNNSubNet import GNNSubNet
 
 
@@ -33,6 +33,12 @@ class Client:
         self.local_model.train()
         # self.prediction_model.grow(10) # greedy step
 
+    def saveClientModelToFile(self, output_dir_path: str):
+        file_name = output_dir_path + '/client_model.json'
+        with open(file_name, 'wb') as f:
+            dump(self.local_model, f)
+            f.close()
+
     def checkClientPerformance(self, output_dir_path: str = None):
         # Lets check the client-specific performances
         p_predicted_class = self.local_model.predict(self.g_test)
@@ -54,11 +60,8 @@ class Client:
                 f.write(f'NMI of ensemble classifier: {nmi}\n')
                 f.close()
 
-
-
     def saveGlobalModel(self, global_model:egnn.ensemble):
         self.global_model = global_model
-
 
     def testGlobalModelWithTestData(self, output_dir_path: str = None):
         # Make predictions using the global model via Majority Vote
@@ -86,7 +89,7 @@ class Client:
 class Coordinator(Client):
     global_model: egnn.ensemble = None
 
-    def aggregateClientModels(self, client_models: list[egnn.ensemble]):
+    def aggregateClientModels(self, client_models: list[GNNSubNet]):
         # aggregate the models from each client
         # without sharing any data
         self.global_model = egnn.aggregate(client_models)
