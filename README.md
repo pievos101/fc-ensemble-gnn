@@ -1,5 +1,6 @@
+# Important: The Dockerfile contains an arm64 Image!!!
 # FeatureCloud App Blank Template
-
+# TODO: rewrite docs
 The app-blank template contains an initial state that does not execute commands other than transitioning to the terminal state.
 This template is a starting point for implementing apps by adding more states and operations.
  
@@ -69,7 +70,7 @@ implementation.
 All app-specific files should include data or codes strictly dependent on the app's functionality.
 
 ##### main.py
-Each app should be implemented in a directory that includes the [`main.py`](main.py) file, which in turn comprises either direct
+Each app should be implemented in a directory that includes the [`main.py`](src/main.py) file, which in turn comprises either direct
 implementation of states or importing them. Moreover, `main` should import `bottle` and `api` packages:
 ```angular2html
 from bottle import Bottle
@@ -83,7 +84,7 @@ from engine.app import app
 
 server = Bottle()
 ```
-One can implement desired states in [`states.py`](states.py) and import it, which because of putting 
+One can implement desired states in [`states.py`](src/depriciated_states.py) and import it, which because of putting 
 [`app_state`](https://github.com/FeatureCloud/FeatureCloud/tree/master/FeatureCloud/app/engine/README.md#registering-states-to-the-app-app_state) on top of state classes, 
 merely importing the states and registering them into the [`app` instance](https://github.com/FeatureCloud/FeatureCloud/tree/master/FeatureCloud/app/engine/README.md#app-instance).     
 

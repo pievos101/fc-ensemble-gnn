@@ -3,7 +3,7 @@ import time
 import bios
 import os
 from FeatureCloud.app.engine.app import AppState, app_state, Role
-from app.algo import Coordinator, Client
+from src.algo import Coordinator, Client
 
 
 class States:
@@ -72,6 +72,10 @@ class ComputeState(AppState):
         os.system(f"cp {ppi_path_input} {ppi_path_output}")
         os.system(f"cp {feats_path_input} {feats_path_output}")
         os.system(f"cp {target_path_input} {target_path_output}")
+
+        while True:
+            # do nothing
+            time.sleep(1)
 
         client = Client()
         time.sleep(2)  # A small delay to make sure the files are copied

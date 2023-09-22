@@ -14,12 +14,14 @@ server {
     listen [::]:9001;
     client_max_body_size 0;
 
+    root /app/react-build-output/;
+    index index.html index.htm index.nginx-debian.html;
+
     location /static {
-        alias /app/fc_app/static/;
+         alias /app/react-build-output/static/;
     }
 
     location / {
-        include proxy_params;
-        proxy_pass http://127.0.0.1:5000/web/;
+         try_files $uri $uri/ =404;
     }
 }
