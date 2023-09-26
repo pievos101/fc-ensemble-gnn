@@ -21,6 +21,7 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "frontend"
+    "src/index.tsx",
+    "src/react-frontend"
   ]
 }
