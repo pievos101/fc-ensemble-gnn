@@ -1,4 +1,3 @@
-import {SidePanel} from "./side-panel/SidePanel";
 import React from "react";
 import {Stack} from "@mui/material";
 import {ModelContainer} from "./model-analysis/ModelContainer";

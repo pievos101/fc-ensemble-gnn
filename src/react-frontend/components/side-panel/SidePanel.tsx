@@ -10,7 +10,7 @@ export function SidePanel() {
     const theme = useTheme()
 
     return (
-        <Paper elevation={4} sx={{borderRadius: 0, pt:2}}>
+        <Paper elevation={4} sx={{borderRadius: 0, pt:2, maxHeight:'100vh', overflowY:'auto'}}>
             <Stack sx={{width: 280, height:'100%'}} flexDirection={'column'}>
                 <img src={MainLogo} alt="Main Logo" style={{width: 110, alignSelf: 'center'}}/>
                 <StatusSection/>
