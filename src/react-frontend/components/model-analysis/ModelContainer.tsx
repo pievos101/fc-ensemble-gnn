@@ -54,7 +54,7 @@ function EnsembleElement({ensembleClassifier}: { ensembleClassifier:TEnsemble })
                     </Typography>
                 </Stack>
                 <Stack direction={'row'} sx={{overflowX: 'auto'}} spacing={1}>
-                    {ensembleClassifier.genes.map(it => <Chip size={'small'} color={"info"} label={it.name}/>)}
+                    {ensembleClassifier.genes.map((it, idx) => <Chip key={idx} size={'small'} color={"info"} label={it.name}/>)}
                 </Stack>
             </Card>
         </>
@@ -98,7 +98,7 @@ export function ModelContainer() {
                     Ensemble
                 </Typography>
                 {
-                    Ensembles.map(it => <EnsembleElement ensembleClassifier={it}/>)
+                    Ensembles.map((it, idx) => <EnsembleElement key={idx} ensembleClassifier={it}/>)
                 }
             </CardContent>
         </Card>

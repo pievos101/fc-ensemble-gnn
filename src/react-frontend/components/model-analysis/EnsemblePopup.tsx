@@ -1,6 +1,6 @@
 import {TEnsemble} from "./ModelContainer";
 import {
-    Alert, Box, Card,
+    Alert,
     CardContent,
     Dialog,
     FormControl,
@@ -9,19 +9,23 @@ import {
     IconButton,
     Radio,
     RadioGroup,
-    Stack, Tab,
+    Stack,
+    Tab,
     Typography,
     useTheme
 } from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTimes} from "@fortawesome/free-solid-svg-icons";
-import React, {useMemo, useRef, useState} from "react";
+import React, {useMemo, useState} from "react";
 import {TabContext, TabList, TabPanel} from "@mui/lab";
-import {GraphCanvas, GraphCanvasRef, GraphScene,} from "reagraph";
+import {GraphCanvas} from "reagraph";
 
 function EnsembleList() {
     return null
 }
+
+// create a helper to sort an array
+
 
 function EnsembleGraph({ensemble}: { ensemble: TEnsemble }) {
     const theme = useTheme()
@@ -30,7 +34,7 @@ function EnsembleGraph({ensemble}: { ensemble: TEnsemble }) {
             ensemble.network.map(it => ({
                 id: it.gene,
                 label: it.gene,
-                data:{
+                data: {
                     weight: Math.floor(Math.random() * 10)
                 }
             }))

@@ -40,7 +40,7 @@ function ConfigurationSelect() {
                 label="Configuration"
                 //onChange={handleChange}
             >
-                {MOCK_CONFIGS.map((it) => <MenuItem value={it.id}>
+                {MOCK_CONFIGS.map((it, idx) => <MenuItem key={idx} value={it.id}>
                     <em>{it.name}</em>
                 </MenuItem>)}
             </Select>
