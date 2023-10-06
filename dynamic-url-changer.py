@@ -19,7 +19,7 @@ if dynamic_url_prefix.startswith('/'):
     dynamic_url_prefix = dynamic_url_prefix[1:]
 
 file_change_counter = 0
-react_build_output_dir = 'app/react-build-output'
+react_build_output_dir = 'react-build-output'
 
 # check if the directory 'react-build-output' exists and there are files in it
 if not os.path.isdir(react_build_output_dir) or len(os.listdir(react_build_output_dir)) == 0:
@@ -27,7 +27,7 @@ if not os.path.isdir(react_build_output_dir) or len(os.listdir(react_build_outpu
     sys.exit(1)
 
 # search for all files in the directory 'react-build-output'
-for root, dirs, files in os.walk('app/react-build-output'):
+for root, dirs, files in os.walk(react_build_output_dir):
     for file in files:
         # open the file
         with open(os.path.join(root, file), 'r') as f:
