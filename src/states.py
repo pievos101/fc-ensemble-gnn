@@ -2,7 +2,7 @@ import time
 
 import bios
 import os
-from FeatureCloud.app.engine.app import AppState, app_state, Role, App
+from FeatureCloud.app.engine.app import AppState, app_state, Role
 from algo import Coordinator, Client
 
 
@@ -22,7 +22,6 @@ OUTPUT_DIR = 'mnt/output'
 TERMINAL = False
 
 # global instance to enable the communication between the states and the web api
-app = App()
 client = Client()
 
 
@@ -33,7 +32,7 @@ def callback_fn_terminal_state():
     TERMINAL = True
 
 
-@app_state(States.INITIAL, app_instance=app)
+@app_state(States.INITIAL)
 class InitialState(AppState):
 
     def register(self):
@@ -62,7 +61,7 @@ class InitialState(AppState):
 
 
 # Client States
-@app_state(name=States.LOCAL_TRAINING, app_instance=app)
+@app_state(name=States.LOCAL_TRAINING)
 class ComputeState(AppState):
 
     def register(self):
@@ -103,7 +102,7 @@ class ComputeState(AppState):
         return States.WAITING_FOR_GLOBAL_MODEL
 
 
-@app_state(name=States.WAITING_FOR_GLOBAL_MODEL, app_instance=app)
+@app_state(name=States.WAITING_FOR_GLOBAL_MODEL)
 class WriteState(AppState):
 
     def register(self):
@@ -129,7 +128,7 @@ class WriteState(AppState):
         return States.TERMINAL
 
 
-@app_state(name=States.WEB_CONTROLLED, app_instance=app)
+@app_state(name=States.WEB_CONTROLLED)
 class WebControlledState(AppState):
 
     def register(self):
@@ -147,7 +146,7 @@ class WebControlledState(AppState):
 
 
 # COORDINATOR STATES
-@app_state(name=States.GLOBAL_AGGREGATION, app_instance=app)
+@app_state(name=States.GLOBAL_AGGREGATION)
 class AggregateState(AppState):
 
     def register(self):
@@ -168,7 +167,7 @@ class AggregateState(AppState):
         return States.WAITING_FOR_CLIENTS_TO_FINISH
 
 
-@app_state(name=States.WAITING_FOR_CLIENTS_TO_FINISH, app_instance=app)
+@app_state(name=States.WAITING_FOR_CLIENTS_TO_FINISH)
 class WaitingForProcessingState(AppState):
 
     def register(self):

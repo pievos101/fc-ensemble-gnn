@@ -22,6 +22,9 @@ RUN git clone https://github.com/pievos101/GNN-SubNet.git
 RUN pip3 install GNN-SubNet/
 RUN pip3 install Ensemble-GNN/
 
+# remove pip cache to reduce image size at runtime
+RUN pip3 cache purge
+
 COPY . /app
 
 EXPOSE 9000 9001

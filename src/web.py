@@ -2,7 +2,7 @@ from json import JSONEncoder
 
 from bottle import Bottle, abort, request
 from FeatureCloud.app.engine.app import app
-from states import callback_fn_terminal_state, app, client
+from states import callback_fn_terminal_state, client
 from algo import getGraphs
 
 api_server = Bottle()
