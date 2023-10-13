@@ -2,8 +2,8 @@ from json import JSONEncoder
 
 from bottle import Bottle, abort, request
 from FeatureCloud.app.engine.app import app
-from src.states import callback_fn_terminal_state, app, client
-from src.algo import getGraphs
+from states import callback_fn_terminal_state, app, client
+from algo import getGraphs
 
 api_server = Bottle()
 
@@ -51,30 +51,19 @@ def getLocalModel():
 #     client.readInputDataAndSetupSubNet(ppi_file, mrna_file, target_file)
 #     # TODO: load the data into the model
 #     # TODO: What to do if the files are already there?
-
-## train local model
-# @api_server.route('/train', method='POST')
-# def trainLocalModel():
-#     # Note this starts the training process and returns immediately. The training process is running in the background
-#     if not client.g:
-#         abort(400, "No data available")
-#     client.trainClient()
-
 # configuration management
 
 ## get all configurations from the community
-@api_server.route('/configurations', method='GET')
-def getConfigurations():
-    # send all configurations from the global context
-
-## create new configuration
-@api_server.route('/configurations', method='POST')
-def createConfiguration():
-    # create a new configuration and send it to the global context
-
-@api_server.route('/terminate', methods=['POST'])
-def terminateRun():
-    callback_fn_terminal_state()
-    return
-
-
+# @api_server.route('/configurations', method='GET')
+# def getConfigurations():
+#     # send all configurations from the global context
+#
+# ## create new configuration
+# @api_server.route('/configurations', method='POST')
+# def createConfiguration():
+#     # create a new configuration and send it to the global context
+#
+# @api_server.route('/terminate', methods=['POST'])
+# def terminateRun():
+#     callback_fn_terminal_state()
+#     return

@@ -33,7 +33,7 @@ def callback_fn_terminal_state():
     TERMINAL = True
 
 
-@app_state(States.INITIAL, app_instance=app, Role=Role.BOTH)
+@app_state(States.INITIAL, app_instance=app)
 class InitialState(AppState):
 
     def register(self):
