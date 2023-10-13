@@ -6,32 +6,46 @@ from sklearn.metrics import balanced_accuracy_score
 from sklearn.metrics import accuracy_score
 from sklearn.metrics.cluster import normalized_mutual_info_score
 from pickle import dump
-from GNNSubNet.GNNSubNet import GNNSubNet
+
+
+def getGraphs(model: egnn.ensemble):
+    graph = []
+    for i in range(0, len(model.ensemble)):
+        graph.append(model.get_graph(i))
+    return graph
 
 
 class Client:
     local_model: egnn.ensemble = None
     global_model: egnn.ensemble = None
-    g: GNNSubNet = None
-    g_train: GNNSubNet = None
-    g_test: GNNSubNet = None
+    g: gnn.GNNSubNet = None
+    g_train: gnn.GNNSubNet = None
+    g_test: gnn.GNNSubNet = None
+    status: str = "No data"
 
     def __init__(self):
         pass
 
     def readInputDataAndSetupSubNet(self, data_write_path: str, ppi_file_path: str, feats_file_path: list[str],
                                     target_file_path: str):
+        self.status = "Loading data"
         self.g = gnn.GNNSubNet(data_write_path, ppi_file_path, feats_file_path, target_file_path)
+        self.status = "Data loaded"
 
     def splitSubNetIntoTrainAndTest(self, train_ratio: float):
+        self.status = "Preparing data"
         self.g_train, self.g_test = egnn.split(self.g, train_ratio)
+        # TODO generate a second last test data set 10/10
+        self.status = "Data prepared"
 
     def trainClient(self, niter=1):
+        self.status = "Training client"
         # create local ensemble classier of client
         self.local_model = egnn.ensemble(self.g_train, niter=niter)
         # train local ensemble classier of client 1
         self.local_model.train()
         # self.prediction_model.grow(10) # greedy step
+        self.status = "Client trained"
 
     def saveClientModelToFile(self, output_dir_path: str):
         file_name = output_dir_path + '/client_model.json'
@@ -40,6 +54,7 @@ class Client:
             f.close()
 
     def checkClientPerformance(self, output_dir_path: str = None):
+        self.status = "Testing client"
         # Lets check the client-specific performances
         p_predicted_class = self.local_model.predict(self.g_test)
         acc = accuracy_score(self.g_test.true_class, p_predicted_class)
@@ -59,11 +74,13 @@ class Client:
                 f.write(f'Accuracy of ensemble classifier: {acc}\n')
                 f.write(f'NMI of ensemble classifier: {nmi}\n')
                 f.close()
+        self.status = "Client tested"
 
     def saveGlobalModel(self, global_model:egnn.ensemble):
         self.global_model = global_model
 
     def testGlobalModelWithTestData(self, output_dir_path: str = None):
+        self.status = "Testing global model"
         # Make predictions using the global model via Majority Vote
         predicted_class = self.global_model.predict(self.g_test)
         # Lets check the performance of the federated ensemble classifier
@@ -84,12 +101,13 @@ class Client:
                 f.write(f'Accuracy of ensemble classifier: {acc}\n')
                 f.write(f'NMI of ensemble classifier: {nmi}\n')
                 f.close()
+        self.status = "Global model tested"
 
 
 class Coordinator(Client):
     global_model: egnn.ensemble = None
 
-    def aggregateClientModels(self, client_models: list[GNNSubNet]):
+    def aggregateClientModels(self, client_models: list[gnn.GNNSubNet]):
         # aggregate the models from each client
         # without sharing any data
         self.global_model = egnn.aggregate(client_models)
