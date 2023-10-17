@@ -68,7 +68,7 @@ export function InputSection() {
 
     const canSubmit = Boolean(mRNAFile) && Boolean(ppiFile) && Boolean(targetFile)
     return (
-        <ContentAccordion icon={faFileImport} title={'Input Data'} defaultExpanded={true}>
+        <ContentAccordion icon={faFileImport} title={'Input Data'} defaultExpanded={true} disabled>
             <Stack spacing={1}>
                 <Alert severity={'info'}>
                     Files of type .txt or .csv are accepted

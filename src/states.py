@@ -95,7 +95,7 @@ class ComputeState(AppState):
         self.log("Training client")
         client.trainClient()
         self.log("Testing client")
-        client.checkClientPerformance(OUTPUT_DIR)
+        client.measurePerformance(OUTPUT_DIR)
         self.log("Sending data to coordinator")
         self.send_data_to_coordinator(client.local_model)
         self.log("Finished sending data to coordinator")

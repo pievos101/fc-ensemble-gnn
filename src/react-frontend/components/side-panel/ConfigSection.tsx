@@ -53,7 +53,7 @@ export function ConfigSection() {
     const theme = useTheme()
 
     return (
-        <ContentAccordion title={'Manual Configuration'} icon={faSliders}>
+        <ContentAccordion title={'Manual Configuration'} icon={faSliders} disabled>
             <Stack spacing={2}>
                 <TextField
                     id="outlined-read-only-input"

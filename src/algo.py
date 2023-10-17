@@ -6,12 +6,19 @@ from sklearn.metrics import balanced_accuracy_score
 from sklearn.metrics import accuracy_score
 from sklearn.metrics.cluster import normalized_mutual_info_score
 from pickle import dump
+from typing import Union
 
 
-def getGraphs(model: egnn.ensemble):
+def getGraphs(model: egnn.ensemble) -> list[list[Union[list[Union[int, str]], int]]]:
+    # get the graphs from the model
+    # and convert them to a list of lists
     graph = []
     for i in range(0, len(model.ensemble)):
-        graph.append(model.get_graph(i))
+        tensor_sub_graph = model.get_graph(i)
+        sub_graph: list[list[Union[int, str]]] = []
+        for j in range(0, len(tensor_sub_graph)):
+            sub_graph.append(tensor_sub_graph[j].tolist())
+        graph.append(sub_graph)
     return graph
 
 
@@ -20,8 +27,11 @@ class Client:
     global_model: egnn.ensemble = None
     g: gnn.GNNSubNet = None
     g_train: gnn.GNNSubNet = None
+    g_validate: gnn.GNNSubNet = None
     g_test: gnn.GNNSubNet = None
     status: str = "No data"
+    ensemble_validation_performance: int = 0
+    ensemble_test_performance: int = 0
 
     def __init__(self):
         pass
@@ -32,10 +42,10 @@ class Client:
         self.g = gnn.GNNSubNet(data_write_path, ppi_file_path, feats_file_path, target_file_path)
         self.status = "Data loaded"
 
-    def splitSubNetIntoTrainAndTest(self, train_ratio: float):
+    def splitSubNetIntoTrainAndTest(self, train_ratio: float, test_ratio: float = 0.5):
         self.status = "Preparing data"
-        self.g_train, self.g_test = egnn.split(self.g, train_ratio)
-        # TODO generate a second last test data set 10/10
+        self.g_train, validate_test = egnn.split(self.g, train_ratio)
+        self.g_validate, self.g_test = egnn.split(validate_test, test_ratio)
         self.status = "Data prepared"
 
     def trainClient(self, niter=1):
@@ -53,10 +63,9 @@ class Client:
             dump(self.local_model, f)
             f.close()
 
-    def checkClientPerformance(self, output_dir_path: str = None):
-        self.status = "Testing client"
+    def checkClientPerformance(self, data_to_test):
         # Lets check the client-specific performances
-        p_predicted_class = self.local_model.predict(self.g_test)
+        p_predicted_class = self.local_model.predict(data_to_test)
         acc = accuracy_score(self.g_test.true_class, p_predicted_class)
         acc_bal = balanced_accuracy_score(self.g_test.true_class, p_predicted_class)
         nmi = normalized_mutual_info_score(self.g_test.true_class, p_predicted_class)
@@ -67,12 +76,20 @@ class Client:
         print("\n-----------")
         print(f'NMI of ensemble classifier:', nmi)
 
+        return acc_bal, acc, nmi
+
+    def measurePerformance(self, output_dir_path: str = None):
+        self.status = "Testing client"
+        # Lets check the client-specific performances
+        test_acc_bal, test_acc, test_nmi = self.checkClientPerformance(self.g_test)
+        validate_acc_bal, validate_acc, validate_nmi = self.checkClientPerformance(self.g_validate)
+
         if output_dir_path:
             # save the values to a file
             with open(output_dir_path + '/client_performance.txt', 'w') as f:
-                f.write(f'Balanced accuracy of ensemble classifier: {acc_bal}\n')
-                f.write(f'Accuracy of ensemble classifier: {acc}\n')
-                f.write(f'NMI of ensemble classifier: {nmi}\n')
+                f.write(f'Balanced accuracy of ensemble classifier: {validate_acc_bal}\n')
+                f.write(f'Accuracy of ensemble classifier: {validate_acc}\n')
+                f.write(f'NMI of ensemble classifier: {validate_nmi}\n')
                 f.close()
         self.status = "Client tested"
 

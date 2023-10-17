@@ -39,20 +39,6 @@ def getLocalModel():
     data = getGraphs(client.local_model)
     return JSONEncoder().encode(data)
 
-# TODO: create the following API endpoints:
-# model management
-## upload patient data (receive several files)
-# @api_server.route('/data', method='PUT')
-# def uploadPatientData():
-#     # get the data from the request
-#     mrna_file = request.files.get('mrna')
-#     ppi_file = request.files.get('ppi')
-#     target_file = request.files.get('target')
-#     client.readInputDataAndSetupSubNet(ppi_file, mrna_file, target_file)
-#     # TODO: load the data into the model
-#     # TODO: What to do if the files are already there?
-# configuration management
-
 ## get all configurations from the community
 # @api_server.route('/configurations', method='GET')
 # def getConfigurations():
