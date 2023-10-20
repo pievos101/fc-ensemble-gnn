@@ -18,7 +18,7 @@ export function ContentContainer({}: ContentContainerProps) {
 
 
     return (
-      <Stack direction={"row"} spacing={4} sx={{ p: 4, overflowX: "auto" }}>
+      <Stack direction={"row"} spacing={4} sx={{ p: 4, overflowX: "auto", alignItems: "start" }}>
         <ModelContainer ensembles={validationSetGraph}
                         title={"Gloabl Model - Validation Set"}
                         description={"The global model with the results of the validation set"} />

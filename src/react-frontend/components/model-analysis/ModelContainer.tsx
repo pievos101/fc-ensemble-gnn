@@ -1,61 +1,10 @@
-import {
-  Avatar,
-  Card,
-  CardContent,
-  CardHeader,
-  Chip,
-  Divider,
-  Paper,
-  Stack,
-  Typography,
-  useTheme
-} from "@mui/material";
+import { Avatar, Card, CardContent, CardHeader, Chip, Paper, Stack, Typography, useTheme } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGlobe } from "@fortawesome/free-solid-svg-icons";
-import React, { useState } from "react";
-import { EnsemblePopup } from "./EnsemblePopup";
+import React from "react";
 import { TGraph } from "../../queries/useGetGraphs";
-
-export type TEnsemble = {
-  result: number
-  weighting: number,
-  genes: { name: string, weight: number }[],
-  network: {
-    gene: string
-    connectedTo: string
-    connectionWeight: number
-  }[]
-}
-
-function EnsembleElement({ ensembleClassifier }: { ensembleClassifier: TGraph }) {
-  const [popupOpen, setPopupOpen] = useState(false);
-
-  const sortedEnsemble = ensembleClassifier.nodes.sort((a, b) => b.weight - a.weight);
-
-  return (
-    <>
-      <EnsemblePopup ensemble={ensembleClassifier} open={popupOpen} onClose={() => setPopupOpen(false)} />
-      <Card style={{ cursor: "pointer" }} sx={{ p: 1, borderRadius: 2, flexShrink: 0 }}
-            onClick={() => setPopupOpen(true)}>
-        <Stack spacing={0.5} sx={{ mb: 1 }}>
-          <Typography>
-            Result: <b>{Math.ceil(ensembleClassifier.performance * 100)}%</b>
-          </Typography>
-          <Typography>
-            Weighting: <b>TODO</b>
-          </Typography>
-          <Typography>
-            Number Nodes: <b>{ensembleClassifier.nodes.length}</b>
-          </Typography>
-        </Stack>
-        <Stack direction={"row"} sx={{ overflowX: "auto" }} spacing={0.5}>
-          {sortedEnsemble.map((it, idx) => <Chip key={idx} size={"small"} color={"info"}
-                                                 label={it.name} />)}
-        </Stack>
-      </Card>
-    </>
-  );
-}
+import { EnsembleElement } from "./EnsembleElement";
+import { ColorGradedValueChip } from "./ColorGradedPercentageChip";
 
 interface ModelContainerProps {
   title: string;
@@ -90,7 +39,13 @@ export function ModelContainer({ ensembles, title }: ModelContainerProps) {
   );
 
   return (
-    <Card sx={{ borderRadius: 2, width: 400 }} elevation={2}>
+    <Card sx={{
+      display: "flex",
+      flexDirection: "column",
+      borderRadius: 2,
+      width: 400,
+      maxHeight: "-webkit-fill-available"
+    }} elevation={2}>
       <CardHeader
         avatar={
           <Avatar color={"info"}>
@@ -100,33 +55,38 @@ export function ModelContainer({ ensembles, title }: ModelContainerProps) {
         title={title}
         subheader="Aggregated from all participants"
       />
-      <Paper elevation={2} sx={{ borderRadius: 0, p: 2 }}>
+      <Paper sx={{
+        borderRadius: 0,
+        p: 2,
+        borderTop: `1px solid ${theme.palette.grey[400]}`,
+        zIndex: 1
+      }} elevation={2}>
         <Typography variant="overline" color={theme.palette.grey[700]}>
           Overview
         </Typography>
-        <Typography variant="subtitle2">
-          Acc: 55%
-        </Typography>
-        <Typography variant="subtitle2">
-          Acc bal: 55%
-        </Typography>
-        <Typography variant="subtitle2">
-          NMI: 55%
-        </Typography>
-        <Typography variant="subtitle2">
-          Ensemble Size: {ensembles.length}
-        </Typography>
+        <Stack flexDirection={"column"} spacing={1}>
+          <Typography variant="subtitle2">
+            Accuracy: <ColorGradedValueChip value={5} />
+          </Typography>
+          <Typography variant="subtitle2">
+            Balanced accuracy: <ColorGradedValueChip value={40} />
+          </Typography>
+          <Typography variant="subtitle2">
+            Normalized Mutual Information: <ColorGradedValueChip value={91} />
+          </Typography>
+          <Typography variant="subtitle2" style={{ alignItems: "center" }}>
+            Ensemble Size: <Chip size={"small"} variant={"outlined"} label={ensembles.length} />
+          </Typography>
+        </Stack>
       </Paper>
-      <CardContent style={{}}>
+      <Stack spacing={1} sx={{ overflowY: "auto", p: 2, zIndex: 0 }}>
         <Typography variant="overline" color={theme.palette.grey[700]}>
           Ensemble
         </Typography>
-        <Stack spacing={1} style={{ overflowY: "auto" }}>
           {
             ensembles.map((it, idx) => <EnsembleElement key={idx} ensembleClassifier={it} />)
           }
         </Stack>
-      </CardContent>
     </Card>
   );
 }
