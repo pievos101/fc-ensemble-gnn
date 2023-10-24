@@ -1,8 +1,9 @@
+import os
 import time
 
 import bios
-import os
 from FeatureCloud.app.engine.app import AppState, app_state, Role
+
 from algo import Coordinator, Client
 
 
@@ -22,7 +23,8 @@ OUTPUT_DIR = 'mnt/output'
 TERMINAL = False
 
 # global instance to enable the communication between the states and the web api
-client = Client()
+local_model: Client = Client()
+global_model: Client = Client()
 
 
 def callback_fn_terminal_state():
@@ -89,16 +91,19 @@ class ComputeState(AppState):
         os.system(f"cp {target_path_input} {target_path_output}")
 
         time.sleep(2)  # A small delay to make sure the files are copied
-        client.readInputDataAndSetupSubNet(OUTPUT_DIR, ppi_path_output, [feats_path_output], target_path_output)
-        self.log("Generating test and train data")
-        client.splitSubNetIntoTrainAndTest(0.8)
+        local_model.readInputDataAndSetupSubNet(OUTPUT_DIR, ppi_path_output, [feats_path_output], target_path_output)
+        self.log("Generating train, validation and test data")
+        local_model.splitSubNetIntoTrainAndTest()
         self.log("Training client")
-        client.trainClient()
+        local_model.train()
+        self.log("Sending local ensemble to coordinator")
+        self.send_data_to_coordinator(local_model.ensemble)
+        self.log("Finished sending local ensemble to coordinator")
+
         self.log("Testing client")
-        client.measurePerformance(OUTPUT_DIR)
-        self.log("Sending data to coordinator")
-        self.send_data_to_coordinator(client.local_model)
-        self.log("Finished sending data to coordinator")
+        local_model.checkValidationSetPerformance()
+        local_model.checkTestSetPerformance()
+        self.log("Finished testing client")
         return States.WAITING_FOR_GLOBAL_MODEL
 
 
@@ -111,16 +116,22 @@ class WriteState(AppState):
 
     def run(self):
         self.log("Waiting for global model from coordinator")
-        global_model = self.await_data(n=1)
+        global_model.ensemble = self.await_data(n=1)
         self.log("Saving global model")
-        client.saveGlobalModel(global_model)
         self.log("Testing global model")
-        client.testGlobalModelWithTestData(OUTPUT_DIR)
+        # test on the same data as the local model
+        global_model.validation_data = local_model.validation_data
+        global_model.test_data = local_model.test_data
+        global_model.checkValidationSetPerformance()
+        global_model.checkTestSetPerformance()
 
         # if we are in ui mode we wait for the user to finish the analysis
         is_ui_mode = self.load('wait_for_ui')
         if is_ui_mode:
             return States.WEB_CONTROLLED
+        else:
+            local_model.savePerformanceToFile(OUTPUT_DIR, 'local_performance.txt')
+            global_model.savePerformanceToFile(OUTPUT_DIR, 'global_performance.txt')
 
         # if we are not in ui mode we tell the coordinator that we are finished and terminate
         self.send_data_to_coordinator("finished")
@@ -160,9 +171,9 @@ class AggregateState(AppState):
         client_models = self.await_data(n=number_of_clients)
         self.log("Aggregating data")
         coordinator.aggregateClientModels(client_models)
-        global_model = coordinator.global_model
+        global_model.ensemble = coordinator.ensemble
         self.log("sending global model to clients")
-        self.broadcast_data(global_model, send_to_self=False)
+        self.broadcast_data(global_model.ensemble, send_to_self=False)
 
         return States.WAITING_FOR_CLIENTS_TO_FINISH
 

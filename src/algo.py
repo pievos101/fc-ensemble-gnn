@@ -1,6 +1,6 @@
-# import GNNSubNet
+import os
+
 from GNNSubNet import GNNSubNet as gnn
-# import ensemble_gnn
 import ensemble_gnn as egnn
 from sklearn.metrics import balanced_accuracy_score
 from sklearn.metrics import accuracy_score
@@ -9,123 +9,165 @@ from pickle import dump
 from typing import Union
 
 
-def getGraphs(model: egnn.ensemble) -> list[list[Union[list[Union[int, str]], int]]]:
-    # get the graphs from the model
-    # and convert them to a list of lists
+def getGraphs(model: egnn.ensemble) -> list[list[Union[list[Union[Union[int, str], float]], int]]]:
+    """Get the knowledge graphs from the ensembles
+
+    Converts the tensor graphs to a native lists
+    :param model: the ensemble model
+    :return: list of graphs containing [[node1_idx], [node2_idx], nodes, performance]
+    """
     graph = []
+    # iterate over all ensemble classifiers
     for i in range(0, len(model.ensemble)):
+        # extract the tensor graph
         tensor_sub_graph = model.get_graph(i)
         sub_graph: list[list[Union[int, str]]] = []
+        # convert the tensor graph to a native list
         for j in range(0, len(tensor_sub_graph)):
             sub_graph.append(tensor_sub_graph[j].tolist())
+
+        subnet: gnn.GNNSubNet = model.ensemble[i]
+        # get the node weights from the subnet of the ensemble classifier
+        transformed_node_mask = []
+        for node in subnet.node_mask:
+            # convert float 32 to float to make it json serializable
+            transformed_node_mask.append(float(node))
+
+        # get the edge weights from the subnet of the ensemble classifier
+        transformed_edge_mask = []
+        for edge in subnet.edge_mask:
+            # convert float 32 to float to make it json serializable
+            transformed_edge_mask.append(float(edge[0]))  # convert the list with one element to a single float
+
+        # add the node and edge weights to the graph data
+        sub_graph.append(transformed_node_mask)
+        sub_graph.append(transformed_edge_mask)
         graph.append(sub_graph)
     return graph
 
 
-class Client:
-    local_model: egnn.ensemble = None
-    global_model: egnn.ensemble = None
-    g: gnn.GNNSubNet = None
-    g_train: gnn.GNNSubNet = None
-    g_validate: gnn.GNNSubNet = None
-    g_test: gnn.GNNSubNet = None
-    status: str = "No data"
-    ensemble_validation_performance: int = 0
-    ensemble_test_performance: int = 0
+class PerformanceResult:
+    nmi: int = 0
+    acc: int = 0
+    acc_bal: int = 0
 
-    def __init__(self):
-        pass
+    def __init__(self, acc, acc_bal, nmi):
+        self.nmi = nmi
+        self.acc = acc
+        self.acc_bal = acc_bal
+
+
+class Client:
+    """
+    This class represents a client in the federated learning process.
+
+    It contains the data, the model and the performance of the client.
+
+    An external model can be loaded into the client and the performance can be computed.
+    """
+    ensemble: egnn.ensemble = None
+
+    data: gnn.GNNSubNet = None
+    training_data: gnn.GNNSubNet = None
+    validation_data: gnn.GNNSubNet = None
+    test_data: gnn.GNNSubNet = None
+
+    status: str = "No data"
+    training_complete: bool = False
+    ensemble_validation_performance: PerformanceResult = None
+    ensemble_test_performance: PerformanceResult = None
+
+    def __init__(self, ensemble: egnn.ensemble = None):
+        if ensemble is not None:
+            self.ensemble = ensemble
 
     def readInputDataAndSetupSubNet(self, data_write_path: str, ppi_file_path: str, feats_file_path: list[str],
                                     target_file_path: str):
         self.status = "Loading data"
-        self.g = gnn.GNNSubNet(data_write_path, ppi_file_path, feats_file_path, target_file_path)
+        self.data = gnn.GNNSubNet(data_write_path, ppi_file_path, feats_file_path, target_file_path)
         self.status = "Data loaded"
 
-    def splitSubNetIntoTrainAndTest(self, train_ratio: float, test_ratio: float = 0.5):
+    def splitSubNetIntoTrainAndTest(self, train_ratio: float = 0.8, test_ratio: float = 0.5):
         self.status = "Preparing data"
-        self.g_train, validate_test = egnn.split(self.g, train_ratio)
-        self.g_validate, self.g_test = egnn.split(validate_test, test_ratio)
+        self.training_data, validate_test = egnn.split(self.data, train_ratio)
+        self.validation_data, self.test_data = egnn.split(validate_test, test_ratio)
         self.status = "Data prepared"
 
-    def trainClient(self, niter=1):
+    def train(self, niter=1):
         self.status = "Training client"
         # create local ensemble classier of client
-        self.local_model = egnn.ensemble(self.g_train, niter=niter)
-        # train local ensemble classier of client 1
-        self.local_model.train()
-        # self.prediction_model.grow(10) # greedy step
+        self.ensemble = egnn.ensemble(self.training_data, niter=niter)
+        # train local ensemble classier
+        self.ensemble.train()
+        # explain the ensemble and generate the edge_mask and node_mask
+        self.ensemble.explain()
+
+        self.training_complete = True
         self.status = "Client trained"
 
-    def saveClientModelToFile(self, output_dir_path: str):
-        file_name = output_dir_path + '/client_model.json'
+    def saveClientModelToFile(self, output_dir_path: str, file_name: str = 'client_model.json'):
+        file_name = os.path.join(output_dir_path, file_name)
         with open(file_name, 'wb') as f:
-            dump(self.local_model, f)
+            dump(self.ensemble, f)
             f.close()
 
-    def checkClientPerformance(self, data_to_test):
-        # Lets check the client-specific performances
-        p_predicted_class = self.local_model.predict(data_to_test)
-        acc = accuracy_score(self.g_test.true_class, p_predicted_class)
-        acc_bal = balanced_accuracy_score(self.g_test.true_class, p_predicted_class)
-        nmi = normalized_mutual_info_score(self.g_test.true_class, p_predicted_class)
-
+    def __checkPerformance(self, data_to_test, weights: list[int] = None, data_name: str = "data set"):
+        # Lets check the client-specific performance
+        p_predicted_class = self.ensemble.predict(data_to_test)
+        if weights is not None:
+            p_predicted_class = self.ensemble.weightedVote(weights)
         print("\n-----------")
-        print(f'Balanced accuracy of ensemble classifier:', acc_bal)
+        print(f'Performance on {data_name}:')
+        acc = accuracy_score(self.test_data.true_class, p_predicted_class)
         print(f'Accuracy of ensemble classifier:', acc)
-        print("\n-----------")
+        acc_bal = balanced_accuracy_score(self.test_data.true_class, p_predicted_class)
+        print(f'Balanced accuracy of ensemble classifier:', acc_bal)
+        nmi = normalized_mutual_info_score(self.test_data.true_class, p_predicted_class)
         print(f'NMI of ensemble classifier:', nmi)
+        print("\n-----------")
 
-        return acc_bal, acc, nmi
+        performance = PerformanceResult(acc=acc, acc_bal=acc_bal, nmi=nmi)
 
-    def measurePerformance(self, output_dir_path: str = None):
-        self.status = "Testing client"
+        return performance
+
+    def checkValidationSetPerformance(self, weights: list[int] = None):
+        self.status = "Testing client on validation set"
+        self.ensemble_validation_performance = self.__checkPerformance(self.validation_data, weights, "validation set")
+        self.status = "Client model tested"
+
+    def checkTestSetPerformance(self, weights: list[int] = None):
+        self.status = "Testing client on test set"
+        self.ensemble_test_performance = self.__checkPerformance(self.test_data, weights, "test set")
+        self.status = "Client model tested"
+
+    def savePerformanceToFile(self, output_dir_path: str = None, name: str = 'client_performance.txt'):
+        # returns if the values have been successfully saved
+        self.status = "Storing performance"
         # Lets check the client-specific performances
-        test_acc_bal, test_acc, test_nmi = self.checkClientPerformance(self.g_test)
-        validate_acc_bal, validate_acc, validate_nmi = self.checkClientPerformance(self.g_validate)
+        if self.ensemble_validation_performance or output_dir_path or self.ensemble_test_performance is None:
+            return False
 
-        if output_dir_path:
-            # save the values to a file
-            with open(output_dir_path + '/client_performance.txt', 'w') as f:
-                f.write(f'Balanced accuracy of ensemble classifier: {validate_acc_bal}\n')
-                f.write(f'Accuracy of ensemble classifier: {validate_acc}\n')
-                f.write(f'NMI of ensemble classifier: {validate_nmi}\n')
-                f.close()
-        self.status = "Client tested"
-
-    def saveGlobalModel(self, global_model:egnn.ensemble):
-        self.global_model = global_model
-
-    def testGlobalModelWithTestData(self, output_dir_path: str = None):
-        self.status = "Testing global model"
-        # Make predictions using the global model via Majority Vote
-        predicted_class = self.global_model.predict(self.g_test)
-        # Lets check the performance of the federated ensemble classifier
-        acc = accuracy_score(self.g_test.true_class, predicted_class)
-        acc_bal = balanced_accuracy_score(self.g_test.true_class, predicted_class)
-        print("\n-----------")
-        print("Balanced accuracy of global ensemble classifier:", acc_bal)
-        print("Accuracy of global ensemble classifier:", acc)
-        nmi = normalized_mutual_info_score(self.g_test.true_class, predicted_class)
-
-        print("\n-----------")
-        print("NMI of global ensemble classifier:", nmi)
-
-        if output_dir_path:
-            # save the values to a file
-            with open(output_dir_path + '/global_model_performance.txt', 'w') as f:
-                f.write(f'Balanced accuracy of ensemble classifier: {acc_bal}\n')
-                f.write(f'Accuracy of ensemble classifier: {acc}\n')
-                f.write(f'NMI of ensemble classifier: {nmi}\n')
-                f.close()
-        self.status = "Global model tested"
+        # save the values to a file
+        with open(os.path.join(output_dir_path, name), 'w') as f:
+            f.write(f'Validation Set:\n')
+            f.write(f'Balanced accuracy of ensemble classifier: {self.ensemble_validation_performance.acc_bal}\n')
+            f.write(f'Accuracy of ensemble classifier: {self.ensemble_validation_performance.acc}\n')
+            f.write(f'NMI of ensemble classifier: {self.ensemble_validation_performance.nmi}\n')
+            f.write(f'\nTest Set:\n')
+            f.write(f'Balanced accuracy of ensemble classifier: {self.ensemble_test_performance.acc_bal}\n')
+            f.write(f'Accuracy of ensemble classifier: {self.ensemble_test_performance.acc}\n')
+            f.write(f'NMI of ensemble classifier: {self.ensemble_test_performance.nmi}\n')
+            f.close()
+        self.status = "Performance saved"
+        return True
 
 
 class Coordinator(Client):
-    global_model: egnn.ensemble = None
 
     def aggregateClientModels(self, client_models: list[gnn.GNNSubNet]):
+        self.status = f'Aggregating {len(client_models)} models'
         # aggregate the models from each client
         # without sharing any data
-        self.global_model = egnn.aggregate(client_models)
-
+        self.ensemble = egnn.aggregate(client_models)
+        self.training_complete = True
+        self.status = "Models aggregated -> Global Model ready"
