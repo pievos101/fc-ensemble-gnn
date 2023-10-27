@@ -20,9 +20,12 @@ import { TGraph } from "../../../queries/useGetGraphs";
 import { ColorGradedValueChip } from "../ColorGradedPercentageChip";
 import { EnsembleGraph } from "./EnsembleGraph";
 import { EnsembleList } from "./EnsembleList";
+import { useSettings } from "../../../queries/useSettings";
+import { useGetPerformance } from "../../../queries/useGetPerformance";
 
-function EnsembleWeighting() {
+function EnsembleWeighting({ id }: { id: number }) {
   const theme = useTheme();
+  const { weights, setWeight } = useSettings();
 
   return (
     <Stack
@@ -43,6 +46,10 @@ function EnsembleWeighting() {
           row
           aria-labelledby="demo-row-radio-buttons-group-label"
           name="row-radio-buttons-group"
+          value={weights[id]}
+          onChange={(e) => {
+            setWeight(id, parseFloat(e.target.value));
+          }}
         >
           <FormControlLabel value={0} control={<Radio />} label="Disable" />
           <FormControlLabel value={0.5} control={<Radio />} label="Decrese" />
@@ -79,7 +86,7 @@ export function EnsemblePopup({ open, onClose, ensemble }: EnsemblePopup) {
           <FontAwesomeIcon icon={faTimes} />
         </IconButton>
         <Typography variant={"h5"}>
-          Ensemble Analysis
+          Ensemble Classifier Analysis
         </Typography>
         <Stack
           flexDirection={"row"}
@@ -100,7 +107,7 @@ export function EnsemblePopup({ open, onClose, ensemble }: EnsemblePopup) {
             Number Nodes: <b>{ensemble.nodes.length}</b>
           </Typography>
         </Stack>
-        <EnsembleWeighting />
+        <EnsembleWeighting id={ensemble.id} />
         <Stack spacing={1} sx={{ width: "100%", maxHeight: "100%" }}>
           <TabContext value={currentTab}>
             <TabList onChange={(e, newValue) => setCurrentTab(newValue)}>

@@ -3,6 +3,13 @@ import { useTheme } from "@mui/material";
 import React, { useMemo } from "react";
 import { GraphCanvas } from "reagraph";
 
+function ensureWeightIsAboveThreshold(weight: number, threshold: number = 0.1) {
+  if (weight < threshold) {
+    return threshold * 10;
+  }
+  return weight * 10;
+}
+
 export function EnsembleGraph({ ensemble }: { ensemble: TGraph }) {
   const theme = useTheme();
 
@@ -11,7 +18,7 @@ export function EnsembleGraph({ ensemble }: { ensemble: TGraph }) {
         id: it.name,
         label: it.name,
         data: {
-          weight: it.weight ?? Math.floor(Math.random() * 10)
+          weight: ensureWeightIsAboveThreshold(it.weight)
         }
       }))
     , [ensemble.nodes]);
@@ -22,9 +29,9 @@ export function EnsembleGraph({ ensemble }: { ensemble: TGraph }) {
         source: it.source,
         target: it.target,
         data: {
-          weigth: it.weight ?? Math.floor(Math.random() * 10)
+          weight: ensureWeightIsAboveThreshold(it.weight)
         },
-        size: Math.floor(Math.random() * 10)
+        size: ensureWeightIsAboveThreshold(it.weight)
       }))
     , [ensemble.edges]);
 

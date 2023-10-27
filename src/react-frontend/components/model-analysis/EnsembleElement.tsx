@@ -1,23 +1,59 @@
 import { TGraph } from "../../queries/useGetGraphs";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { EnsemblePopup } from "./ensemble-popup/EnsemblePopup";
-import { Card, Chip, Stack, Typography } from "@mui/material";
+import { Card, Chip, Palette, Stack, Typography, useTheme } from "@mui/material";
+import { useSettings } from "../../queries/useSettings";
+import { faBan, faCaretDown, faCaretUp, faMinus, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export type TEnsemble = {
-  result: number
-  weighting: number,
-  genes: { name: string, weight: number }[],
-  network: {
-    gene: string
-    connectedTo: string
-    connectionWeight: number
-  }[]
+function Weighting({ weight }: { weight: number }) {
+  const theme = useTheme();
+
+  function getColor(weight: number) {
+    switch (weight) {
+      case 0:
+        return theme.palette.grey[700];
+      case 0.5:
+        return theme.palette.error.main;
+      case 1:
+        return theme.palette.grey[700];
+      case 1.5:
+        return theme.palette.success.main;
+    }
+  }
+
+  function getIcon(weight: number) {
+    switch (weight) {
+      case 0:
+        return faBan;
+      case 0.5:
+        return faCaretDown;
+      case 1.5:
+        return faCaretUp;
+    }
+  }
+
+  const icon = getIcon(weight);
+  return (
+    <Typography>
+      Weighting:{" "}
+      {icon && <FontAwesomeIcon icon={icon} color={getColor(weight)} />}
+      <Typography color={getColor(weight)} style={{ display: "contents" }}>
+        {" "}{weight}
+      </Typography>
+    </Typography>
+  );
 }
 
 export function EnsembleElement({ ensembleClassifier }: { ensembleClassifier: TGraph }) {
   const [popupOpen, setPopupOpen] = useState(false);
+  const { weights } = useSettings();
 
-  const sortedEnsemble = ensembleClassifier.nodes.sort((a, b) => b.weight - a.weight);
+  const ensembleWeight = weights[ensembleClassifier.id];
+
+  const sortedEnsemble = useMemo(() => {
+    return ensembleClassifier.nodes.sort((a, b) => b.weight - a.weight);
+  }, [ensembleClassifier.nodes]);
 
   return (
     <>
@@ -28,9 +64,7 @@ export function EnsembleElement({ ensembleClassifier }: { ensembleClassifier: TG
           <Typography>
             Result: <b>{Math.ceil(ensembleClassifier.performance * 100)}%</b>
           </Typography>
-          <Typography>
-            Weighting: <b>TODO</b>
-          </Typography>
+          <Weighting weight={ensembleWeight} />
           <Typography>
             Number Nodes: <b>{ensembleClassifier.nodes.length}</b>
           </Typography>

@@ -1,30 +1,28 @@
 import React from "react";
-import { Box, CircularProgress, Stack, Typography } from "@mui/material";
-import {ModelContainer} from "./model-analysis/ModelContainer";
+import { Stack } from "@mui/material";
+import { EnsembleModel } from "./model-analysis/EnsembleModel";
 import { useGetStatus } from "../queries/useGetStatus";
-import { useGetGraphs } from "../queries/useGetGraphs";
-import { useTestSet } from "../queries/useTestSet";
+import { useGetGlobalGraphs, useGetLocalGraphs } from "../queries/useGetGraphs";
+import { faComputer, faGlobe } from "@fortawesome/free-solid-svg-icons";
 
-interface ContentContainerProps {
-}
+export function ContentContainer() {
+  const { data: statusData } = useGetStatus();
+  const { globalModel } = useGetGlobalGraphs(!statusData?.global_training_complete);
+  const { localModel } = useGetLocalGraphs(!statusData?.local_training_complete);
 
-export function ContentContainer({}: ContentContainerProps) {
-  const { loading, modelNotReadyYet } = useGetStatus();
-  const { validationSetGraph, testSetGraph, isError } = useGetGraphs();
-  const { testSetUnlocked } = useTestSet();
-
-  console.log("validationSetGraph", validationSetGraph);
-  console.log("testSetGraph", testSetGraph);
-
-
-    return (
-      <Stack direction={"row"} spacing={4} sx={{ p: 4, overflowX: "auto", alignItems: "start" }}>
-        <ModelContainer ensembles={validationSetGraph}
-                        title={"Gloabl Model - Validation Set"}
-                        description={"The global model with the results of the validation set"} />
-        {testSetUnlocked && <ModelContainer ensembles={testSetGraph}
-                                            title={"Gloabl Model - Test Set"}
-                                            description={"The final result with weighted ensembles"} />}
-        </Stack>
-    )
+  return (
+    <Stack direction={"row"} spacing={5}
+           sx={{ p: 3, overflowX: "auto", alignItems: "start", justifyContent: "space-around" }}>
+      <EnsembleModel ensembles={localModel}
+                     icon={faComputer}
+                     title={"Local Model"}
+                     description={"Only trained on the local data"}
+      />
+      <EnsembleModel ensembles={globalModel}
+                     icon={faGlobe}
+                     title={"Global Model"}
+                     description={"Aggregated from all participating clients"}
+      />
+    </Stack>
+  );
 }

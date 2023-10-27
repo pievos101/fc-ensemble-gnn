@@ -114,7 +114,12 @@ class Client:
     def __checkPerformance(self, data_to_test, weights: list[int] = None, data_name: str = "data set"):
         # Lets check the client-specific performance
         p_predicted_class = self.ensemble.predict(data_to_test)
-        if weights is not None:
+        if weights is not None and len(weights) > 0:
+            if len(weights) != len(self.ensemble.ensemble):
+                print(f'Number of weights: {len(weights)}')
+                print(f'Number of ensemble classifiers: {len(self.ensemble.ensemble)}')
+                raise Exception('The number of weights must match the number of ensemble classifiers')
+            print(f'Using weights: {weights}')
             p_predicted_class = self.ensemble.weightedVote(weights)
         print("\n-----------")
         print(f'Performance on {data_name}:')
@@ -126,9 +131,7 @@ class Client:
         print(f'NMI of ensemble classifier:', nmi)
         print("\n-----------")
 
-        performance = PerformanceResult(acc=acc, acc_bal=acc_bal, nmi=nmi)
-
-        return performance
+        return PerformanceResult(acc, acc_bal, nmi)
 
     def checkValidationSetPerformance(self, weights: list[int] = None):
         self.status = "Testing client on validation set"

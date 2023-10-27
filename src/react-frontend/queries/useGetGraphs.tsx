@@ -1,13 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { getApiUrl } from "../App";
 import { useEffect, useMemo } from "react";
+import { useSettings } from "./useSettings";
 
 export type TGraph = {
+  id: number,
   nodes: {
+    id: number,
     name: string,
     weight: number
   }[],
   edges: {
+    id: number,
     source: string,
     target: string,
     weight: number
@@ -15,7 +19,7 @@ export type TGraph = {
   performance: number
 }
 
-function graphArrayToObj(graph: any): TGraph {
+function graphArrayToObj(graph: any, idx: number): TGraph {
   const edges = graph[0];
   const edge_starts: number[] = edges[0];
   const edge_ends: number[] = edges[1];
@@ -23,45 +27,62 @@ function graphArrayToObj(graph: any): TGraph {
   const performance: number = graph[2];
 
   return {
-    nodes: nodes.map((it: any) => ({ name: it, weight: 1 })),
+    id: idx,
+    nodes: nodes.map((it: any, idx: number) => ({
+      id: idx,
+      name: it,
+      weight: graph[3]?.[idx] ?? 1 // fallback to 1 if no weights are provided
+    })),
     performance,
     edges: edge_starts.map((start: number, i: number) => ({
+      id: i,
       source: nodes[start],
       target: nodes[edge_ends[i]],
-      weight: 1
+      weight: graph[4]?.[i] ?? 1 // fallback to 1 if no weights are provided
     }))
   };
 }
 
-export function useGetGraphs() {
-  const { error: globalModelError, isLoading: globalModelLoading, data: globalModelData, refetch } = useQuery({
+export function useGetGlobalGraphs(disabled: boolean = false) {
+  const { data: globalModelData, ...rest } = useQuery({
     queryKey: ["graphs"],
     queryFn: async () => {
       const res = await fetch(getApiUrl() + "/global-model");
       return await res.json();
-    }
+    },
+    retryDelay: 2000,
+    retry: true,
+    enabled: !disabled
   });
 
-  const { error: localModelError, isLoading: localModelLoading, data: localModelData } = useQuery({
+  const globalModel: TGraph[] = useMemo(() => {
+    return globalModelData?.map(graphArrayToObj) ?? [];
+  }, [globalModelData]);
+
+  return {
+    globalModel: globalModel,
+    ...rest
+  };
+}
+
+export function useGetLocalGraphs(disabled: boolean = false) {
+  const { data: globalModelData, ...rest } = useQuery({
     queryKey: ["graphs"],
     queryFn: async () => {
       const res = await fetch(getApiUrl() + "/local-model");
       return await res.json();
-    }
+    },
+    retryDelay: 2000,
+    retry: true,
+    enabled: !disabled
   });
 
-  const loading = globalModelLoading && localModelLoading;
-
-  const globalModel: TGraph[] = useMemo(() => {
-    return globalModelData?.map(graphArrayToObj);
+  const localModel: TGraph[] = useMemo(() => {
+    return globalModelData?.map(graphArrayToObj) ?? [];
   }, [globalModelData]);
 
   return {
-    validationSetGraph: globalModel,
-    testSetGraph: globalModel,
-    error: localModelError ?? globalModelError,
-    isError: Boolean(localModelError) || Boolean(globalModelError),
-    loading: loading,
-    fetch: refetch
+    localModel: localModel,
+    ...rest
   };
 }

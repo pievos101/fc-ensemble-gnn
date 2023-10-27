@@ -23,7 +23,7 @@ export function EnsembleList({ ensemble }: { ensemble: TGraph }) {
           <FontAwesomeIcon icon={faDna} /> Nodes
         </Typography>
         <DataGrid columns={nodeColumns}
-                  rows={ensemble.nodes.map((it, idx) => ({ id: idx, ...it }))}
+                  rows={ensemble.nodes}
                   hideFooter
                   style={{ maxHeight: "40vh" }}
         />
@@ -34,7 +34,7 @@ export function EnsembleList({ ensemble }: { ensemble: TGraph }) {
           <FontAwesomeIcon icon={faArrowsTurnToDots} /> Edges
         </Typography>
         <DataGrid columns={edgeColumns}
-                  rows={ensemble.edges.map((it, idx) => ({ id: idx, ...it }))}
+                  rows={ensemble.edges}
                   hideFooter
                   style={{ maxHeight: "40vh" }}
         />

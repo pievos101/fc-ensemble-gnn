@@ -12,5 +12,5 @@ export function ColorGradedValueChip({ value }: { value: number }) {
   }
 
   return <Chip color={getColor(value)} sx={{ fontWeight: 600 }} size={"small"} variant={"outlined"}
-               label={`${value}%`} />;
+               label={`${value} %`} />;
 }

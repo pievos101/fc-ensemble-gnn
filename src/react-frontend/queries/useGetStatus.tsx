@@ -3,21 +3,24 @@ import { getApiUrl } from "../App";
 import React from "react";
 
 export function useGetStatus() {
-  const { error, isLoading, data, isError } = useQuery<{ status?: string, state?: string }>({
+  const { error, isLoading, data, isError } = useQuery<{
+    status: string,
+    global_training_complete: boolean,
+    local_training_complete: boolean
+    state?: string, // only available in FeatureCloud environment
+  }>({
     queryKey: ["status"],
     queryFn: async () => {
       const res = await fetch(getApiUrl() + "/status");
       return await res.json();
     },
-    refetchInterval: 1000
+    refetchInterval: 1500
   });
-
-  const modelNotReadyYet = !data || data?.state !== "web_controlled"; // status is hard-coded in status.py
 
   return {
     status: data?.state ?? "unknown",
     error,
     loading: isLoading,
-    modelNotReadyYet
+    data
   };
 }

@@ -1,3 +1,4 @@
+import json
 from json import JSONEncoder
 
 from FeatureCloud.app.engine.app import app
@@ -23,7 +24,7 @@ def applyWebServerRoutes(server: Bottle, local_client: Client, global_client: Cl
             status['state'] = 'No FeatureCloud App'
             return status
 
-    @server.post('/compute-performance')
+    @server.post('/compute-performance', method='POST')
     def getStatus():
         # get the model weights and validation or test set flag from the request
         # weights:
@@ -31,9 +32,11 @@ def applyWebServerRoutes(server: Bottle, local_client: Client, global_client: Cl
         #   decrease = 0.5
         #   neutral = 1
         #   increase = 1.5
-        weights: list = request.json['weights_per_ensemble']
-        is_test_set = request.json['is_test_set']
-        client_to_use = request.json['client']
+        body = json.load(request.body)
+
+        weights: list = body.get('weights')
+        is_test_set = body.get('is_test_set')
+        client_to_use = body.get('client')
 
         if client_to_use == 'local':
             client = local_client
@@ -42,10 +45,16 @@ def applyWebServerRoutes(server: Bottle, local_client: Client, global_client: Cl
 
         if is_test_set:
             client.checkTestSetPerformance(weights)
-            return client.ensemble_test_performance
+            performance = client.ensemble_test_performance
         else:
             client.checkValidationSetPerformance(weights)
-            return client.ensemble_validation_performance
+            performance = client.ensemble_validation_performance
+
+        return {
+            'acc': round(performance.acc, 4),
+            'acc_bal': round(performance.acc_bal, 4),
+            'nmi': round(performance.nmi, 4),
+        }
 
     @server.get('/global-model')
     def getGlobalModel():
