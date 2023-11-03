@@ -4,10 +4,8 @@ import React, { useMemo, useState } from "react";
 import { GraphCanvas } from "reagraph";
 
 function ensureWeightIsAboveThreshold(weight: number, threshold: number = 0.1) {
-  if (weight < threshold) {
-    return threshold * 10;
-  }
-  return weight * 10;
+  // return with threshold to ensure UI elements are not too small;
+  return weight < threshold ? threshold + weight : weight;
 }
 
 interface SnackbarCall {
@@ -37,10 +35,10 @@ export function EnsembleGraph({ ensemble }: { ensemble: TGraph }) {
         source: it.source,
         target: it.target,
         data: {
-          weight: ensureWeightIsAboveThreshold(it.weight),
+          weight: ensureWeightIsAboveThreshold(it.weight * 10, 1),
           weight_unscaled: it.weight
         },
-        size: ensureWeightIsAboveThreshold(it.weight)
+        size: ensureWeightIsAboveThreshold(it.weight * 10, 1)
       }))
     , [ensemble.edges]);
 

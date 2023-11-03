@@ -52,9 +52,9 @@ function EnsembleWeighting({ id }: { id: number }) {
           }}
         >
           <FormControlLabel value={0} control={<Radio />} label="Disable" />
-          <FormControlLabel value={0.5} control={<Radio />} label="Decrese" />
           <FormControlLabel value={1} control={<Radio />} label="Neutral" />
-          <FormControlLabel value={1.5} control={<Radio />} label="Increase" />
+          <FormControlLabel value={2} control={<Radio />} label="Small increase" />
+          <FormControlLabel value={5} control={<Radio />} label="Large increase" />
         </RadioGroup>
       </FormControl>
     </Stack>
