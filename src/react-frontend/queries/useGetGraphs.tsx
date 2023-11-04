@@ -45,7 +45,7 @@ function graphArrayToObj(graph: any, idx: number): TGraph {
 
 export function useGetGlobalGraphs(disabled: boolean = false) {
   const { data: globalModelData, ...rest } = useQuery({
-    queryKey: ["graphs"],
+    queryKey: ["global-graphs"],
     queryFn: async () => {
       const res = await fetch(getApiUrl() + "/global-model");
       return await res.json();
@@ -67,7 +67,7 @@ export function useGetGlobalGraphs(disabled: boolean = false) {
 
 export function useGetLocalGraphs(disabled: boolean = false) {
   const { data: globalModelData, ...rest } = useQuery({
-    queryKey: ["graphs"],
+    queryKey: ["local-graphs"],
     queryFn: async () => {
       const res = await fetch(getApiUrl() + "/local-model");
       return await res.json();

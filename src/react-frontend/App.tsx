@@ -9,8 +9,8 @@ import { ErrorBoundary } from "react-error-boundary";
 const queryClient = new QueryClient()
 
 export function getApiUrl() {
-  //return "http://localhost:5001/web-api";
-    return window.location.href + '/api'
+  // return "http://localhost:5001/web-api";
+  return window.location.href + "api";
 }
 
 function ErrorFallback({ error, resetErrorBoundary }: any) {
