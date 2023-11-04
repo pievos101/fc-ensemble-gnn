@@ -5,6 +5,7 @@ numpy
 pyyaml
 pandas==1.5.1
 scikit-learn
+bottle_cors_plugin
 
 torchvision
 torch-geometric
