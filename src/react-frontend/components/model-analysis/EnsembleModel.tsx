@@ -131,14 +131,33 @@ function StatsElement({ ensembleLength }: { ensembleLength: number }) {
   );
 }
 
+function ModelNotReadyStatsPlaceholder() {
+  const theme = useTheme();
+
+  return (
+    <Paper sx={{
+      borderRadius: 0,
+      p: 2,
+      borderTop: `1px solid ${theme.palette.grey[400]}`,
+      zIndex: 1
+    }} elevation={2}>
+      <Typography variant="overline" color={theme.palette.grey[700]}>
+        Waiting for model...
+      </Typography>
+      <LinearProgress sx={{ my: 1 }} />
+    </Paper>
+  );
+}
+
 interface ModelContainerProps {
   title: string;
   ensembles: TGraph[];
   description?: string;
   icon: IconDefinition;
+  modelNotReady?: boolean;
 }
 
-export function EnsembleModel({ ensembles, title, description, icon }: ModelContainerProps) {
+export function EnsembleModel({ ensembles, title, description, icon, modelNotReady }: ModelContainerProps) {
   const theme = useTheme();
   const value = useSettingsConstructor();
 
@@ -167,7 +186,11 @@ export function EnsembleModel({ ensembles, title, description, icon }: ModelCont
           title={title}
           subheader={description}
         />
-        <StatsElement ensembleLength={ensembles.length} />
+        {modelNotReady ? (
+          <ModelNotReadyStatsPlaceholder />
+        ) : (
+          <StatsElement ensembleLength={ensembles.length} />
+        )}
         <Stack spacing={1} sx={{ overflowY: "auto", p: 2, zIndex: 0 }}>
           <Typography variant="overline" color={theme.palette.grey[700]}>
             Ensemble

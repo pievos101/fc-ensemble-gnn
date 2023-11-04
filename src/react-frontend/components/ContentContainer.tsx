@@ -17,11 +17,13 @@ export function ContentContainer() {
                      icon={faComputer}
                      title={"Local Model"}
                      description={"Only trained on the local data"}
+                     modelNotReady={!statusData?.local_training_complete}
       />
       <EnsembleModel ensembles={globalModel}
                      icon={faGlobe}
                      title={"Global Model"}
                      description={"Aggregated from all participating clients"}
+                     modelNotReady={!statusData?.global_training_complete}
       />
     </Stack>
   );
