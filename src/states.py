@@ -156,6 +156,8 @@ class WebControlledState(AppState):
         # we wait for the user to finish the analysis
         if TERMINAL:
             self.send_data_to_coordinator("finished")
+            local_model.savePerformanceToFile(OUTPUT_DIR, 'local_performance.txt')
+            global_model.savePerformanceToFile(OUTPUT_DIR, 'global_performance.txt')
             self.log("Web Analysis finished. Transitioning to TERMINAL state")
             return States.TERMINAL
         else:
