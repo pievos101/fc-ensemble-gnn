@@ -5,10 +5,10 @@ type TSettings = {
   client: "local" | "global",
 }
 
-export function useSettingsConstructor() {
+export function useSettingsConstructor(client: "local" | "global" = "local") {
   const [settings, _setSettings] = useState<TSettings>({
     testSetUnlocked: false,
-    client: "local"
+    client: client
   });
 
   const [weights, setWeights] = useState<number[]>([]);

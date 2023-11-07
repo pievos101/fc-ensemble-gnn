@@ -19,26 +19,28 @@ export type TGraph = {
   performance: number
 }
 
-function graphArrayToObj(graph: any, idx: number): TGraph {
-  const edges = graph[0];
+function graphArrayToObj(subnetwork: any, idx: number): TGraph {
+  const edges = subnetwork[0];
   const edge_starts: number[] = edges[0];
   const edge_ends: number[] = edges[1];
-  const nodes = graph[1];
-  const performance: number = graph[2];
+  const nodes = subnetwork[1];
+  const performance: number = subnetwork[2];
+  const node_weights: number[] = subnetwork[3];
+  const edge_weights: number[] = subnetwork[4];
 
   return {
     id: idx,
     nodes: nodes.map((it: any, idx: number) => ({
       id: idx,
       name: it,
-      weight: graph[3]?.[idx] ?? 1 // fallback to 1 if no weights are provided
+      weight: node_weights?.[idx] ?? 0 // fallback to 1 if no weights are provided
     })),
     performance,
     edges: edge_starts.map((start: number, i: number) => ({
       id: i,
       source: nodes[start],
       target: nodes[edge_ends[i]],
-      weight: graph[4]?.[i] ?? 1 // fallback to 1 if no weights are provided
+      weight: edge_weights?.[i] ?? 0 // fallback to 1 if no weights are provided
     }))
   };
 }

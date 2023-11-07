@@ -8,9 +8,7 @@ export function useGetPerformance(opts: {
   client: "local" | "global"
   weights: number[]
 }) {
-  const { weights, settings } = useSettings();
-
-  const key = opts.isTestSet ? "performance-test" : "performance-validation";
+  const key = `performance-${opts.isTestSet ? "test" : "validation"}-${opts.client}`;
 
   const { error, isLoading, data, refetch } = useQuery<{
     acc: number,
@@ -34,7 +32,7 @@ export function useGetPerformance(opts: {
 
   const stats = useMemo(() => ({
     acc: Math.round((data?.acc ?? 0) * 100),
-    acc_balanced: ((data?.acc_bal ?? 0) * 100),
+    acc_balanced: Math.round((data?.acc_bal ?? 0) * 100),
     nmi: (data?.nmi ?? 0)
   }), [data]);
 
