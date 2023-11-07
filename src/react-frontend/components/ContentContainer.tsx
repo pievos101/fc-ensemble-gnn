@@ -18,12 +18,14 @@ export function ContentContainer() {
                      title={"Local Model"}
                      description={"Only trained on the local data"}
                      modelNotReady={!statusData?.local_training_complete}
+                     client={"local"}
       />
       <EnsembleModel ensembles={globalModel}
                      icon={faGlobe}
                      title={"Global Model"}
                      description={"Aggregated from all participating clients"}
                      modelNotReady={!statusData?.global_training_complete}
+                     client={"global"}
       />
     </Stack>
   );

@@ -2,6 +2,7 @@ import { Alert, AlertTitle, Button, Chip, LinearProgress, Stack, Typography } fr
 import React, { useEffect } from "react";
 import { useGetStatus } from "../../queries/useGetStatus";
 import { useSettings } from "../../queries/useSettings";
+import { getApiUrl } from "../../App";
 
 export function StatusSection() {
   const { status, error, loading, data } = useGetStatus();
@@ -9,6 +10,10 @@ export function StatusSection() {
   useEffect(() => {
     console.info("Status Data:", data);
   }, [data]);
+
+  const terminateWorkflow = async () => {
+    await fetch(getApiUrl() + "/terminate", { method: "POST" });
+  };
 
   const modelIsLoading = loading || status === "local_training";
 
@@ -28,6 +33,9 @@ export function StatusSection() {
           {JSON.stringify(error)}
         </Typography>}
       </>
+      <Button onClick={terminateWorkflow} color={"error"} variant={"outlined"}>
+        Terminate Workflow
+      </Button>
     </Stack>
   );
 }
