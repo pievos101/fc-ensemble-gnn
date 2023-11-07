@@ -15,7 +15,7 @@ const edgeColumns: GridColDef[] = [
   { field: "weight", headerName: "Weight", width: 120, type: "number" }
 ];
 
-export function EnsembleList({ ensemble }: { ensemble: TGraph }) {
+export function SubnetList({ ensemble }: { ensemble: TGraph }) {
   return (
     <Stack spacing={2} direction={"row"} sx={{ justifyContent: "center" }}>
       <Stack spacing={1}>
@@ -36,7 +36,7 @@ export function EnsembleList({ ensemble }: { ensemble: TGraph }) {
         <DataGrid columns={edgeColumns}
                   rows={ensemble.edges}
                   hideFooter
-                  style={{ maxHeight: "40vh" }}
+                  style={{ maxHeight: "60vh" }}
         />
       </Stack>
     </Stack>

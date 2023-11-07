@@ -5,6 +5,7 @@ import { GraphCanvas } from "reagraph";
 
 function ensureWeightIsAboveThreshold(weight: number, threshold: number = 0.1) {
   // return with threshold to ensure UI elements are not too small;
+  return weight;
   return weight < threshold ? threshold + weight : weight;
 }
 
@@ -14,7 +15,7 @@ interface SnackbarCall {
   id: string;
 }
 
-export function EnsembleGraph({ ensemble }: { ensemble: TGraph }) {
+export function SubnetGraph({ ensemble }: { ensemble: TGraph }) {
   const theme = useTheme();
   const [snackbarPostion, setSnackbarPostion] = useState<SnackbarCall | null>(null);
 
@@ -35,10 +36,10 @@ export function EnsembleGraph({ ensemble }: { ensemble: TGraph }) {
         source: it.source,
         target: it.target,
         data: {
-          weight: ensureWeightIsAboveThreshold(it.weight * 10, 1),
+          weight: ensureWeightIsAboveThreshold(it.weight * 10, 0.1),
           weight_unscaled: it.weight
         },
-        size: ensureWeightIsAboveThreshold(it.weight * 10, 1)
+        size: ensureWeightIsAboveThreshold(it.weight * 10, 0.1)
       }))
     , [ensemble.edges]);
 
@@ -58,7 +59,7 @@ export function EnsembleGraph({ ensemble }: { ensemble: TGraph }) {
         </Alert>
       </Snackbar>
       <div style={{
-        height: 500,
+        height: "70vh",
         width: "100%",
         overflow: "hidden",
         position: "relative",

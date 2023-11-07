@@ -1,6 +1,6 @@
 import { TGraph } from "../../queries/useGetGraphs";
 import React, { useMemo, useState } from "react";
-import { EnsemblePopup } from "./ensemble-popup/EnsemblePopup";
+import { SubnetPopup } from "./subnet-popup/SubnetPopup";
 import { Card, Chip, Palette, Stack, Typography, useTheme } from "@mui/material";
 import { useSettings } from "../../queries/useSettings";
 import { faBan, faCaretDown, faCaretUp, faMinus, faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -45,7 +45,7 @@ function Weighting({ weight }: { weight: number }) {
   );
 }
 
-export function EnsembleElement({ ensembleClassifier }: { ensembleClassifier: TGraph }) {
+export function SubnetElement({ ensembleClassifier }: { ensembleClassifier: TGraph }) {
   const [popupOpen, setPopupOpen] = useState(false);
   const { weights } = useSettings();
 
@@ -57,7 +57,7 @@ export function EnsembleElement({ ensembleClassifier }: { ensembleClassifier: TG
 
   return (
     <>
-      <EnsemblePopup ensemble={ensembleClassifier} open={popupOpen} onClose={() => setPopupOpen(false)} />
+      <SubnetPopup ensemble={ensembleClassifier} open={popupOpen} onClose={() => setPopupOpen(false)} />
       <Card style={{ cursor: "pointer" }} sx={{ p: 1, borderRadius: 2, flexShrink: 0 }}
             onClick={() => setPopupOpen(true)}>
         <Stack spacing={0.5} sx={{ mb: 1 }}>
