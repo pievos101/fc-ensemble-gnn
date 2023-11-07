@@ -9,8 +9,15 @@ import { ErrorBoundary } from "react-error-boundary";
 const queryClient = new QueryClient()
 
 export function getApiUrl() {
-  // return "http://localhost:5001/web-api";
-  return window.location.href + "api";
+  // check if window.location.href includes the string "app-traffic"
+  // if it does, then return the production API url
+  // otherwise, return the local API url
+  if (window.location.href.includes("app-traffic")) {
+    return window.location.href + "api";
+  } else {
+    // This is the default port for local development
+    return "http://localhost:5001/web-api";
+  }
 }
 
 function ErrorFallback({ error, resetErrorBoundary }: any) {
@@ -23,7 +30,7 @@ function ErrorFallback({ error, resetErrorBoundary }: any) {
       justifyContent: "center"
     }}>
       <Alert severity={"error"}>
-        <AlertTitle>A React runtime error occured</AlertTitle>
+        <AlertTitle>A React runtime error occurred</AlertTitle>
         Error: <pre>{error.message}</pre>
         <Button onClick={resetErrorBoundary} variant={"contained"} color={"error"}>
           Try again
