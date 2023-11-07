@@ -1,4 +1,5 @@
 import {
+  Accordion, AccordionDetails, AccordionSummary,
   Avatar,
   Button,
   Card,
@@ -20,7 +21,7 @@ import {
   faArrowDown91,
   faArrowDownWideShort,
   faArrowUp19,
-  faArrowUpShortWide,
+  faArrowUpShortWide, faChevronDown,
   IconDefinition
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useMemo, useState } from "react";
@@ -111,33 +112,36 @@ function StatsElement({ ensembleLength }: { ensembleLength: number }) {
   };
 
   return (
-    <Paper sx={{
-      borderRadius: 0,
-      p: 2,
-      borderTop: `1px solid ${theme.palette.grey[400]}`,
-      zIndex: 1
-    }} elevation={2}>
-      <Typography variant="overline" color={theme.palette.grey[700]}>
-        Overview
-      </Typography>
-      <Stack flexDirection={"column"} spacing={1}>
-        <StatsContainer spacing={1}>
-          <PerformanceOverview stats={validationStats} loading={validationStatsLoading} title={"Validation Set"} />
-        </StatsContainer>
-        {settings.testSetUnlocked ? (
-            <StatsContainer spacing={1}>
-              <PerformanceOverview stats={testStats} loading={testStatsLoading} title={"Test Set"} />
-            </StatsContainer>
-          ) :
-          (
-            <Button variant={"outlined"} color={"info"} onClick={testWithTestSet}>Test on Test set</Button>
-          )
-        }
-        <Typography variant="subtitle2" style={{ alignItems: "center" }}>
-          Ensemble Size: <Chip size={"small"} variant={"outlined"} label={ensembleLength} />
+    <Accordion elevation={2} defaultExpanded>
+      <AccordionSummary
+        expandIcon={<FontAwesomeIcon icon={faChevronDown} />}
+        aria-controls="panel1a-content"
+        id="panel1a-header"
+      >
+        <Typography variant="overline" color={theme.palette.grey[700]} fontSize={14}>
+          Statistic Overview
         </Typography>
-      </Stack>
-    </Paper>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Stack flexDirection={"column"} spacing={1}>
+          <StatsContainer spacing={1}>
+            <PerformanceOverview stats={validationStats} loading={validationStatsLoading} title={"Validation Set"} />
+          </StatsContainer>
+          {settings.testSetUnlocked ? (
+              <StatsContainer spacing={1}>
+                <PerformanceOverview stats={testStats} loading={testStatsLoading} title={"Test Set"} />
+              </StatsContainer>
+            ) :
+            (
+              <Button variant={"outlined"} color={"info"} onClick={testWithTestSet}>Test on Test set</Button>
+            )
+          }
+          <Typography variant="subtitle2" style={{ alignItems: "center" }}>
+            Ensemble Size: <Chip size={"small"} variant={"outlined"} label={ensembleLength} />
+          </Typography>
+        </Stack>
+      </AccordionDetails>
+    </Accordion>
   );
 }
 
@@ -227,7 +231,7 @@ export function EnsembleModel({ ensembles, title, description, icon, modelNotRea
         )}
         <Stack spacing={1} sx={{ overflowY: "auto", p: 2, zIndex: 0 }}>
           <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
-            <Typography variant="overline" color={theme.palette.grey[700]} fontSize={20}>
+            <Typography variant="overline" color={theme.palette.grey[700]} fontSize={14}>
               Ensemble
             </Typography>
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
