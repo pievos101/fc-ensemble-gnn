@@ -1,19 +1,29 @@
 import {
   Avatar,
+  Button,
   Card,
-  CardContent,
   CardHeader,
   Chip,
+  FormControl,
+  InputLabel,
+  LinearProgress,
+  MenuItem,
   Paper,
+  Select,
   Stack,
-  Typography,
-  useTheme,
   styled,
-  CircularProgress, Button, LinearProgress
+  Typography,
+  useTheme
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGlobe, IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import React, { useCallback, useEffect } from "react";
+import {
+  faArrowDown91,
+  faArrowDownWideShort,
+  faArrowUp19,
+  faArrowUpShortWide,
+  IconDefinition
+} from "@fortawesome/free-solid-svg-icons";
+import React, { useEffect, useMemo, useState } from "react";
 import { TGraph } from "../../queries/useGetGraphs";
 import { EnsembleElement } from "./EnsembleElement";
 import { ColorGradedValueChip } from "./ColorGradedPercentageChip";
@@ -149,17 +159,26 @@ function ModelNotReadyStatsPlaceholder() {
   );
 }
 
+enum SortBy {
+  PerformanceAsc = "perf-asc",
+  PerformanceDesc = "perf-desc",
+  NodesAsc = "nodes-asc",
+  NodesDesc = "nodes-desc"
+}
+
 interface ModelContainerProps {
   title: string;
   ensembles: TGraph[];
   description?: string;
   icon: IconDefinition;
   modelNotReady?: boolean;
+  client?: "local" | "global";
 }
 
-export function EnsembleModel({ ensembles, title, description, icon, modelNotReady }: ModelContainerProps) {
+export function EnsembleModel({ ensembles, title, description, icon, modelNotReady, client }: ModelContainerProps) {
   const theme = useTheme();
-  const value = useSettingsConstructor();
+  const value = useSettingsConstructor(client);
+  const [sortValue, setSortValue] = useState<SortBy>(SortBy.NodesDesc);
 
   useEffect(() => {
     if (ensembles.length > 0) {
@@ -167,6 +186,21 @@ export function EnsembleModel({ ensembles, title, description, icon, modelNotRea
       value.initializeWeights(ensembles.length);
     }
   }, [ensembles.length]);
+
+  const sortedEnsembles = useMemo(() => {
+    switch (sortValue) {
+      case "perf-asc":
+        return ensembles.sort((a, b) => a.performance - b.performance);
+      case "perf-desc":
+        return ensembles.sort((a, b) => b.performance - a.performance);
+      case "nodes-asc":
+        return ensembles.sort((a, b) => a.nodes.length - b.nodes.length);
+      case "nodes-desc":
+        return ensembles.sort((a, b) => b.nodes.length - a.nodes.length);
+      default:
+        return ensembles;
+    }
+  }, [ensembles, sortValue]);
 
   return (
     <SettingsContext.Provider value={value}>
@@ -192,11 +226,38 @@ export function EnsembleModel({ ensembles, title, description, icon, modelNotRea
           <StatsElement ensembleLength={ensembles.length} />
         )}
         <Stack spacing={1} sx={{ overflowY: "auto", p: 2, zIndex: 0 }}>
-          <Typography variant="overline" color={theme.palette.grey[700]}>
-            Ensemble
-          </Typography>
+          <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
+            <Typography variant="overline" color={theme.palette.grey[700]} fontSize={20}>
+              Ensemble
+            </Typography>
+            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+              <InputLabel id="demo-select-small-label">Sort by</InputLabel>
+              <Select
+                value={sortValue}
+                label="Sort by"
+                onChange={e => setSortValue(e.target.value as any)}
+              >
+                <MenuItem value={SortBy.PerformanceAsc}>
+                  <FontAwesomeIcon icon={faArrowUp19} style={{ marginRight: 8 }} />
+                  Result increasing
+                </MenuItem>
+                <MenuItem value={SortBy.PerformanceDesc}>
+                  <FontAwesomeIcon icon={faArrowDown91} style={{ marginRight: 8 }} />
+                  Result decreasing
+                </MenuItem>
+                <MenuItem value={SortBy.NodesAsc}>
+                  <FontAwesomeIcon icon={faArrowUpShortWide} style={{ marginRight: 8 }} />
+                  Nodes increasing
+                </MenuItem>
+                <MenuItem value={SortBy.NodesDesc}>
+                  <FontAwesomeIcon icon={faArrowDownWideShort} style={{ marginRight: 8 }} />
+                  Nodes decreasing
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </Stack>
           {
-            ensembles.map((it, idx) => <EnsembleElement key={idx} ensembleClassifier={it} />)
+            sortedEnsembles.map((it, idx) => <EnsembleElement key={idx} ensembleClassifier={it} />)
           }
         </Stack>
       </Card>

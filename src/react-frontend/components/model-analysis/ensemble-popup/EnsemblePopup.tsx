@@ -21,7 +21,6 @@ import { ColorGradedValueChip } from "../ColorGradedPercentageChip";
 import { EnsembleGraph } from "./EnsembleGraph";
 import { EnsembleList } from "./EnsembleList";
 import { useSettings } from "../../../queries/useSettings";
-import { useGetPerformance } from "../../../queries/useGetPerformance";
 
 function EnsembleWeighting({ id }: { id: number }) {
   const theme = useTheme();
@@ -51,10 +50,10 @@ function EnsembleWeighting({ id }: { id: number }) {
             setWeight(id, parseFloat(e.target.value));
           }}
         >
-          <FormControlLabel value={0} control={<Radio />} label="Disable" />
-          <FormControlLabel value={1} control={<Radio />} label="Neutral" />
-          <FormControlLabel value={2} control={<Radio />} label="Small increase" />
-          <FormControlLabel value={5} control={<Radio />} label="Large increase" />
+          <FormControlLabel value={0} control={<Radio />} label="Disable (x0)" />
+          <FormControlLabel value={1} control={<Radio />} label="Neutral (x1)" />
+          <FormControlLabel value={2} control={<Radio />} label="Small increase (x2)" />
+          <FormControlLabel value={5} control={<Radio />} label="Large increase (x5)" />
         </RadioGroup>
       </FormControl>
     </Stack>
@@ -71,7 +70,7 @@ export function EnsemblePopup({ open, onClose, ensemble }: EnsemblePopup) {
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState<"graph" | "list">("graph");
   return (
-    <Dialog open={open} maxWidth={"xl"}>
+    <Dialog open={open} maxWidth={"xl"} fullWidth={currentTab === "graph"}>
       <Stack spacing={1} sx={{ p: 2, height: "100%" }}>
         <IconButton onClick={onClose} color={"error"} style={{
           height: 32,
@@ -117,7 +116,7 @@ export function EnsemblePopup({ open, onClose, ensemble }: EnsemblePopup) {
                    icon={<FontAwesomeIcon icon={faList}
                                           style={{ width: 14, height: 14, marginRight: 6, marginTop: 4 }} />} />
             </TabList>
-            <TabPanel value="graph" sx={{ p: 0, width: "90vw" }}><EnsembleGraph ensemble={ensemble} /></TabPanel>
+            <TabPanel value="graph" sx={{ p: 0, width: "100%" }}><EnsembleGraph ensemble={ensemble} /></TabPanel>
             <TabPanel value="list"><EnsembleList ensemble={ensemble} /></TabPanel>
           </TabContext>
         </Stack>
