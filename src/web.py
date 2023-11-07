@@ -25,7 +25,7 @@ def applyWebServerRoutes(server: Bottle, local_client: Client, global_client: Cl
             status['state'] = 'No FeatureCloud App'
             return status
 
-    @server.post('/compute-performance', method='POST')
+    @server.post('/compute-performance')
     def getStatus():
         # get the model weights and validation or test set flag from the request
         # weights:
@@ -84,13 +84,12 @@ def applyWebServerRoutes(server: Bottle, local_client: Client, global_client: Cl
         data = getGraphs(local_client.ensemble)
         return JSONEncoder().encode(data)
 
+    @api_server.post('/terminate')
+    def terminateRun():
+        callback_fn_terminal_state()
+
 
 api_server = Bottle()
-
-
-@api_server.route('/terminate', methods=['POST'])
-def terminateRun():
-    callback_fn_terminal_state()
 
 
 api_server.install(cors_plugin('*'))
