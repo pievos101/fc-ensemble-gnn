@@ -3,7 +3,7 @@ bottle
 bios
 numpy
 pyyaml
-pandas==1.5.1
+pandas==1.5.1            # Using a newer Pandas will result in a runtime error while training
 scikit-learn
 bottle_cors_plugin
 
