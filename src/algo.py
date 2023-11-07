@@ -77,9 +77,17 @@ class Client:
     ensemble_validation_performance: PerformanceResult = None
     ensemble_test_performance: PerformanceResult = None
 
-    def __init__(self, ensemble: egnn.ensemble = None):
-        if ensemble is not None:
-            self.ensemble = ensemble
+    def __init__(self, init_empty: bool = False):
+        if init_empty:
+            self.ensemble = egnn.ensemble()
+
+    def getSendAbleEnsemble(self):
+        """
+        Returns the ensemble in a detached and sendable format
+        Removes the training data from the ensemble
+        :return: the ensemble
+        """
+        return self.ensemble.send_model()
 
     def readInputDataAndSetupSubNet(self, data_write_path: str, ppi_file_path: str, feats_file_path: list[str],
                                     target_file_path: str):
@@ -89,8 +97,7 @@ class Client:
 
     def splitSubNetIntoTrainAndTest(self, train_ratio: float = 0.8, test_ratio: float = 0.5):
         self.status = "Preparing data"
-        self.training_data, validate_test = egnn.split(self.data, train_ratio)
-        self.validation_data, self.test_data = egnn.split(validate_test, test_ratio)
+        self.training_data, self.validation_data, self.test_data = egnn.split_n(self.data, 3, [0.8, 0.1, 0.1])
         self.status = "Data prepared"
 
     def train(self, niter=1):
@@ -123,11 +130,11 @@ class Client:
             p_predicted_class = self.ensemble.weightedVote(weights)
         print("\n-----------")
         print(f'Performance on {data_name}:')
-        acc = accuracy_score(self.test_data.true_class, p_predicted_class)
+        acc = accuracy_score(data_to_test.true_class, p_predicted_class)
         print(f'Accuracy of ensemble classifier:', acc)
-        acc_bal = balanced_accuracy_score(self.test_data.true_class, p_predicted_class)
+        acc_bal = balanced_accuracy_score(data_to_test.true_class, p_predicted_class)
         print(f'Balanced accuracy of ensemble classifier:', acc_bal)
-        nmi = normalized_mutual_info_score(self.test_data.true_class, p_predicted_class)
+        nmi = normalized_mutual_info_score(data_to_test.true_class, p_predicted_class)
         print(f'NMI of ensemble classifier:', nmi)
         print("\n-----------")
 
@@ -167,10 +174,16 @@ class Client:
 
 class Coordinator(Client):
 
-    def aggregateClientModels(self, client_models: list[gnn.GNNSubNet]):
-        self.status = f'Aggregating {len(client_models)} models'
+    def __init__(self):
+        super().__init__(init_empty=True)
+
+    def aggregateClientModels(self, client_ensembles: list[list[gnn.GNNSubNet]]):
+        self.status = f'Aggregating {len(client_ensembles)} models'
         # aggregate the models from each client
-        # without sharing any data
-        self.ensemble = egnn.aggregate(client_models)
+        for xx in range(len(client_ensembles)):
+            ensemble = client_ensembles[xx]
+            for yy in range(len(ensemble)):
+                self.ensemble.ensemble.append(ensemble[yy])
+
         self.training_complete = True
         self.status = "Models aggregated -> Global Model ready"

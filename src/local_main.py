@@ -20,4 +20,4 @@ global_client.training_complete = True
 
 # start the server
 server.mount('/web-api', server)
-server.run(host='localhost', port=5001, debug=True, reloader=True)
+server.run(host='localhost', port=5001, debug=True)

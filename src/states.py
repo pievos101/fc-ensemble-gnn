@@ -24,7 +24,7 @@ TERMINAL = False
 
 # global instance to enable the communication between the states and the web api
 local_model: Client = Client()
-global_model: Client = Client()
+global_model: Client = Client(init_empty=True)
 
 
 def callback_fn_terminal_state():
@@ -97,7 +97,8 @@ class ComputeState(AppState):
         self.log("Training client")
         local_model.train()
         self.log("Sending local ensemble to coordinator")
-        self.send_data_to_coordinator(local_model.ensemble)
+        # send only the ensemble to the coordinator, without the training data
+        self.send_data_to_coordinator(local_model.getSendAbleEnsemble())
         self.log("Finished sending local ensemble to coordinator")
 
         self.log("Testing client")
@@ -116,8 +117,13 @@ class WriteState(AppState):
 
     def run(self):
         self.log("Waiting for global model from coordinator")
-        global_model.ensemble = self.await_data(n=1)
-        self.log("Saving global model")
+        received_ensemble: list = self.await_data()
+        self.log(f"Received Global model length: {len(received_ensemble)}")
+        # add all ensembles to the global model, each at a time
+
+        for ensemble_el in received_ensemble:
+            global_model.ensemble.add(ensemble_el)
+        global_model.training_complete = True
         self.log("Testing global model")
         # test on the same data as the local model
         global_model.validation_data = local_model.validation_data
@@ -166,14 +172,19 @@ class AggregateState(AppState):
     def run(self):
         self.log("Transitioning to WAITING_FOR_PROCESSING state")
         coordinator = Coordinator()
+        # await data
         number_of_clients = self.load('n_clients')
         self.log(f"Waiting for data from n={number_of_clients} clients")
         client_models = self.await_data(n=number_of_clients)
-        self.log("Aggregating data")
+
+        # aggregate the models
+        self.log(f"Aggregating {len(client_models)} models")
         coordinator.aggregateClientModels(client_models)
+
+        # distribute the global model to the clients
         global_model.ensemble = coordinator.ensemble
-        self.log("sending global model to clients")
-        self.broadcast_data(global_model.ensemble, send_to_self=False)
+        self.log(f"sending global model with {len(coordinator.ensemble.ensemble)} ensembles to clients")
+        self.broadcast_data(coordinator.getSendAbleEnsemble(), send_to_self=False)
 
         return States.WAITING_FOR_CLIENTS_TO_FINISH
 

@@ -3,6 +3,7 @@ from json import JSONEncoder
 
 from FeatureCloud.app.engine.app import app
 from bottle import Bottle, abort, request
+from bottle_cors_plugin import cors_plugin
 
 from algo import getGraphs, Client
 from states import local_model, global_model, callback_fn_terminal_state
@@ -92,4 +93,5 @@ def terminateRun():
     callback_fn_terminal_state()
 
 
+api_server.install(cors_plugin('*'))
 applyWebServerRoutes(api_server, local_model, global_model, app)
