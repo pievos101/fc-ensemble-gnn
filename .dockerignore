@@ -6,4 +6,6 @@ src/react-frontend
 node_modules
 Ensemble-GNN
 GNN-SubNet
+data
+
 
