@@ -1,0 +1,4 @@
+input_features_name: "FEATURES_synthetic_client1.txt"
+input_ppi_name: "NETWORK_synthetic.txt"
+input_target_name: "TARGET_synthetic_client1.txt"
+wait_for_ui: true
