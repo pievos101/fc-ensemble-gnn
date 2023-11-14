@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build . --tag fc-ensemble-gnn
+docker build . --tag ensemble_gnn
