@@ -18,7 +18,7 @@ def applyWebServerRoutes(server: Bottle, local_client: Client, global_client: Cl
             'local_training_complete': local_client.training_complete,
             'global_training_complete': global_client.training_complete,
         }
-        if fc_app is not None:
+        if fc_app is not None and fc_app.current_state is not None:
             status['state'] = fc_app.current_state.name
             return status
         else:
