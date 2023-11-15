@@ -67,6 +67,8 @@ class Client:
     """
     ensemble: egnn.ensemble = None
 
+    is_coordinator: bool = False
+
     data: gnn.GNNSubNet = None
     training_data: gnn.GNNSubNet = None
     validation_data: gnn.GNNSubNet = None
@@ -76,6 +78,8 @@ class Client:
     training_complete: bool = False
     ensemble_validation_performance: PerformanceResult = None
     ensemble_test_performance: PerformanceResult = None
+
+    weight_configuration: list[int] = []
 
     def __init__(self, init_empty: bool = False):
         if init_empty:
@@ -88,6 +92,9 @@ class Client:
         :return: the ensemble
         """
         return self.ensemble.send_model()
+
+    def storeWeights(self, weights: list[int]):
+        self.weight_configuration = weights
 
     def readInputDataAndSetupSubNet(self, data_write_path: str, ppi_file_path: str, feats_file_path: list[str],
                                     target_file_path: str):
@@ -118,8 +125,12 @@ class Client:
             dump(self.ensemble, f)
             f.close()
 
-    def __checkPerformance(self, data_to_test, weights: list[int] = None, data_name: str = "data set"):
-        # Lets check the client-specific performance
+    def __checkPerformance(self, data_to_test, weights_override: list[int] = None, data_name: str = "data set"):
+        # if needed, there can be a check if weights which are not stored in the client
+        weights = self.weight_configuration
+        if weights_override is not None:
+            weights = weights_override
+
         p_predicted_class = self.ensemble.predict(data_to_test)
         if weights is not None and len(weights) > 0:
             if len(weights) != len(self.ensemble.ensemble):
@@ -140,14 +151,15 @@ class Client:
 
         return PerformanceResult(acc, acc_bal, nmi)
 
-    def checkValidationSetPerformance(self, weights: list[int] = None):
+    def checkValidationSetPerformance(self, weights_override: list[int] = None):
         self.status = "Testing client on validation set"
-        self.ensemble_validation_performance = self.__checkPerformance(self.validation_data, weights, "validation set")
+        self.ensemble_validation_performance = self.__checkPerformance(self.validation_data, weights_override,
+                                                                       "validation set")
         self.status = "Client model tested"
 
-    def checkTestSetPerformance(self, weights: list[int] = None):
+    def checkTestSetPerformance(self, weights_override: list[int] = None):
         self.status = "Testing client on test set"
-        self.ensemble_test_performance = self.__checkPerformance(self.test_data, weights, "test set")
+        self.ensemble_test_performance = self.__checkPerformance(self.test_data, weights_override, "test set")
         self.status = "Client model tested"
 
     def savePerformanceToFile(self, output_dir_path: str = None, name: str = 'client_performance.txt'):
@@ -167,6 +179,8 @@ class Client:
             f.write(f'Balanced accuracy of ensemble classifier: {self.ensemble_test_performance.acc_bal}\n')
             f.write(f'Accuracy of ensemble classifier: {self.ensemble_test_performance.acc}\n')
             f.write(f'NMI of ensemble classifier: {self.ensemble_test_performance.nmi}\n')
+            f.write(f'\nWeights:\n')
+            f.write(f'{self.weight_configuration}\n')
             f.close()
         self.status = "Performance saved"
         return True

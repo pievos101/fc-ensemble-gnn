@@ -44,6 +44,7 @@ class InitialState(AppState):
     def run(self):
         if self.is_coordinator:
             self.log("Transitioning to AGGREGATE state")
+            local_model.is_coordinator = True
             self.store('n_clients', len(self.clients) - 1)  # -1 because the coordinator is also a client
             return States.GLOBAL_AGGREGATION
 

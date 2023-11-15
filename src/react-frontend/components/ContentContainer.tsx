@@ -10,6 +10,10 @@ export function ContentContainer() {
   const { globalModel } = useGetGlobalGraphs(!statusData?.global_training_complete);
   const { localModel } = useGetLocalGraphs(!statusData?.local_training_complete);
 
+  if (statusData?.role === "coordinator") {
+    return null;
+  }
+
   return (
     <Stack direction={"row"} spacing={5}
            sx={{ p: 3, overflowX: "auto", alignItems: "start", justifyContent: "space-around" }}>

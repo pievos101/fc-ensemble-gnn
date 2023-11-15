@@ -121,7 +121,7 @@ export function EnsembleModel({ ensembles, title, description, icon, modelNotRea
               <Select
                 value={sortValue}
                 label="Sort by"
-                onChange={e => setSortValue(e.target.value as any)}
+                onChange={e => setSortValue(e.target?.value as any)}
               >
                 <MenuItem value={SortBy.PerformanceAsc}>
                   <FontAwesomeIcon icon={faArrowUp19} style={{ marginRight: 8 }} />
@@ -143,7 +143,7 @@ export function EnsembleModel({ ensembles, title, description, icon, modelNotRea
             </FormControl>
           </Stack>
           {
-            sortedEnsembles.map((it, idx) => <SubnetElement key={idx} ensembleClassifier={it} />)
+            sortedEnsembles?.map((it, idx) => <SubnetElement key={idx} ensembleClassifier={it} />)
           }
         </Stack>
       </Card>

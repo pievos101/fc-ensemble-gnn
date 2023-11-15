@@ -1,8 +1,19 @@
 import { Alert, AlertTitle, Button, Chip, LinearProgress, Stack, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useGetStatus } from "../../queries/useGetStatus";
-import { useSettings } from "../../queries/useSettings";
 import { getApiUrl } from "../../App";
+
+function ControllerInfo() {
+  return (
+    <Alert severity={"warning"}>
+      <AlertTitle>
+        Role: Coordinator
+      </AlertTitle>
+      The coordinator does not train a model itself, but does the aggregation internally and can overview the global
+      model.
+    </Alert>
+  );
+}
 
 export function StatusSection() {
   const { status, error, loading, data } = useGetStatus();
@@ -15,7 +26,8 @@ export function StatusSection() {
     await fetch(getApiUrl() + "/terminate", { method: "POST" });
   };
 
-  const modelIsLoading = loading || status === "local_training";
+  const isCoordinator = data?.role === "coordinator";
+  const modelIsLoading = (loading || status === "local_training") && !isCoordinator;
 
   return (
     <Stack spacing={2} sx={{ p: 2 }}>
@@ -33,6 +45,9 @@ export function StatusSection() {
           {JSON.stringify(error)}
         </Typography>}
       </>
+      {
+        isCoordinator && <ControllerInfo />
+      }
       <Button onClick={terminateWorkflow} color={"error"} variant={"outlined"}>
         Terminate Workflow
       </Button>

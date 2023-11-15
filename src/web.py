@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 import json
 from json import JSONEncoder
 
-from FeatureCloud.app.engine.app import app
+from FeatureCloud.app.engine.app import app, App
 from bottle import Bottle, abort, request
 from bottle_cors_plugin import cors_plugin
 
@@ -9,7 +11,7 @@ from algo import getGraphs, Client
 from states import local_model, global_model, callback_fn_terminal_state
 
 
-def applyWebServerRoutes(server: Bottle, local_client: Client, global_client: Client, fc_app: app):
+def applyWebServerRoutes(server: Bottle, local_client: Client, global_client: Client, fc_app: App | None = None):
     @server.get('/status')
     def getStatus():
         # return the current status of the process
@@ -17,9 +19,12 @@ def applyWebServerRoutes(server: Bottle, local_client: Client, global_client: Cl
             'status': local_client.status,
             'local_training_complete': local_client.training_complete,
             'global_training_complete': global_client.training_complete,
+            'role': "client"
         }
         if fc_app is not None and fc_app.current_state is not None:
             status['state'] = fc_app.current_state.name
+            if local_client.is_coordinator:
+                status['role'] = "coordinator"
             return status
         else:
             status['state'] = 'No FeatureCloud App'
@@ -44,11 +49,14 @@ def applyWebServerRoutes(server: Bottle, local_client: Client, global_client: Cl
         else:
             client = global_client
 
+        if weights is not None:
+            client.storeWeights(weights)
+
         if is_test_set:
-            client.checkTestSetPerformance(weights)
+            client.checkTestSetPerformance()
             performance = client.ensemble_test_performance
         else:
-            client.checkValidationSetPerformance(weights)
+            client.checkValidationSetPerformance()
             performance = client.ensemble_validation_performance
 
         return {
@@ -93,4 +101,4 @@ api_server = Bottle()
 
 
 api_server.install(cors_plugin('*'))
-applyWebServerRoutes(api_server, local_model, global_model, app)
+applyWebServerRoutes(server=api_server, local_client=local_model, global_client=global_model, fc_app=app)

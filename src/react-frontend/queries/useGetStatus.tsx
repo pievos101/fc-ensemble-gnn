@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { getApiUrl } from "../App";
-import React from "react";
 
 export function useGetStatus() {
   const { error, isLoading, data, isError } = useQuery<{
@@ -8,6 +7,7 @@ export function useGetStatus() {
     global_training_complete: boolean,
     local_training_complete: boolean
     state?: string, // only available in FeatureCloud environment
+    role: "client" | "coordinator"
   }>({
     queryKey: ["status"],
     queryFn: async () => {
