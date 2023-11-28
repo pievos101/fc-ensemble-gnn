@@ -1,7 +1,7 @@
 import {
   Accordion,
   AccordionDetails,
-  AccordionSummary, Button,
+  AccordionSummary,
   Chip,
   LinearProgress,
   Stack,
@@ -14,7 +14,8 @@ import { useSettings } from "../../queries/useSettings";
 import { useGetPerformance } from "../../queries/useGetPerformance";
 import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faMagnifyingGlassChart } from "@fortawesome/free-solid-svg-icons";
+import { StyledButton } from "../StyledButton";
 
 const StatsContainer = styled(Stack)(({ theme }) => ({
   border: `1px solid`,
@@ -118,7 +119,12 @@ export function StatsElement({ ensembleLength }: { ensembleLength: number }) {
               </StatsContainer>
             ) :
             (
-              <Button variant={"outlined"} color={"info"} onClick={testWithTestSet}>Test on Test set</Button>
+              <StyledButton
+                color={"info"}
+                onClick={testWithTestSet}
+                icon={faMagnifyingGlassChart}
+                hoverText={"Test the model on the test set. This will unlock the test set data. This can only be done once, too make sure no fitting is done on the test set."}
+              >Test on Test set</StyledButton>
             )
           }
           <Typography variant="subtitle2" style={{ alignItems: "center" }}>

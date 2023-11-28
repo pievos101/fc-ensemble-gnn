@@ -1,7 +1,9 @@
-import { Alert, AlertTitle, Button, Chip, LinearProgress, Stack, Typography } from "@mui/material";
+import { Alert, AlertTitle, Chip, LinearProgress, Stack, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useGetStatus } from "../../queries/useGetStatus";
 import { getApiUrl } from "../../App";
+import { faStop } from "@fortawesome/free-solid-svg-icons";
+import { StyledButton } from "../StyledButton";
 
 function ControllerInfo() {
   return (
@@ -48,9 +50,12 @@ export function StatusSection() {
       {
         isCoordinator && <ControllerInfo />
       }
-      <Button onClick={terminateWorkflow} color={"error"} variant={"outlined"}>
+      <StyledButton onClick={terminateWorkflow} color={"error"} variant={"outlined"}
+                    icon={faStop}
+                    hoverText={"Terminates this client. Current workflow is finished and the output is saved."}
+      >
         Terminate Workflow
-      </Button>
+      </StyledButton>
     </Stack>
   );
 }
