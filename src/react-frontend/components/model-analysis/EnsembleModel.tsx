@@ -25,6 +25,7 @@ import { TGraph } from "../../queries/useGetGraphs";
 import { SubnetElement } from "./SubnetElement";
 import { SettingsContext, useSettingsConstructor } from "../../queries/useSettings";
 import { StatsElement } from "./StatsElement";
+import { WeightingElement } from "./WeightingElement";
 
 
 function ModelNotReadyStatsPlaceholder() {
@@ -111,6 +112,7 @@ export function EnsembleModel({ ensembles, title, description, icon, modelNotRea
         ) : (
           <StatsElement ensembleLength={ensembles.length} />
         )}
+        {client === "global" && <WeightingElement ensembleLength={ensembles.length} />}
         <Stack spacing={1} sx={{ overflowY: "auto", p: 2, zIndex: 0 }}>
           <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
             <Typography variant="overline" color={theme.palette.grey[700]} fontSize={14}>

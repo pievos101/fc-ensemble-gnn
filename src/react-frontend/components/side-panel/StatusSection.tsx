@@ -34,7 +34,7 @@ export function StatusSection() {
   return (
     <Stack spacing={2} sx={{ p: 2 }}>
       <Typography variant={"overline"} fontSize={"1rem"}>
-        Status: <Chip color={"info"} label={status} variant={"outlined"} sx={{ p: 0 }} />
+        Status: <Chip color={"info"} label={status.replaceAll("_", " ")} variant={"outlined"} sx={{ p: 0 }} />
       </Typography>
       {modelIsLoading && <Alert severity={"info"}>
         <AlertTitle>Long computing time</AlertTitle>

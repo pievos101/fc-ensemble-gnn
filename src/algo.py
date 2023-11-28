@@ -80,6 +80,7 @@ class Client:
     ensemble_test_performance: PerformanceResult = None
 
     weight_configuration: list[int] = []
+    aggregated_weight_configuration: list[int] = []
 
     def __init__(self, init_empty: bool = False):
         if init_empty:

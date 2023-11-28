@@ -8,7 +8,7 @@ from bottle import Bottle, abort, request
 from bottle_cors_plugin import cors_plugin
 
 from algo import getGraphs, Client
-from states import local_model, global_model, callback_fn_terminal_state
+from states import local_model, global_model, callback_fn_terminal_state, start_weight_distribution, States
 
 
 def applyWebServerRoutes(server: Bottle, local_client: Client, global_client: Client, fc_app: App | None = None):
@@ -19,12 +19,17 @@ def applyWebServerRoutes(server: Bottle, local_client: Client, global_client: Cl
             'status': local_client.status,
             'local_training_complete': local_client.training_complete,
             'global_training_complete': global_client.training_complete,
-            'role': "client"
+            'role': "client",
+            'weight_aggregation_ongoing': False,
+            'global_weights_available': len(global_client.aggregated_weight_configuration) > 0,
         }
         if fc_app is not None and fc_app.current_state is not None:
             status['state'] = fc_app.current_state.name
             if local_client.is_coordinator:
                 status['role'] = "coordinator"
+            # check if the weight aggregation is ongoing
+            if status['state'] == States.DISTRIBUTE_WEIGHTS or status['state'] == States.WAITING_FOR_GLOBAL_WEIGHTS:
+                status['weight_aggregation_ongoing'] = True
             return status
         else:
             status['state'] = 'No FeatureCloud App'
@@ -91,6 +96,32 @@ def applyWebServerRoutes(server: Bottle, local_client: Client, global_client: Cl
 
         data = getGraphs(local_client.ensemble)
         return JSONEncoder().encode(data)
+
+    @server.get('/global-weights')
+    def getGlobalWeights():
+        """
+        Returns the global weights if available, otherwise returns an 404 error
+        :return: JSON (list[int])
+        """
+        if not global_client.aggregated_weight_configuration:
+            abort(404, "Global weights not available yet")
+            return {'available': False}
+
+        return JSONEncoder().encode(global_client.aggregated_weight_configuration)
+
+    @server.post('/distribute-weights')
+    def distributeWeights():
+        # reset the global weights before each distribution
+        global_client.aggregated_weight_configuration = []
+
+        # if no weights are available, use neutral weights (1) for each classifier
+        if len(global_client.weight_configuration) == 0:
+            global_client.weight_configuration = [1] * len(global_client.ensemble.ensemble)
+
+        # TODO: remove this line, only for testing
+        # global_client.aggregated_weight_configuration = global_client.weight_configuration
+
+        start_weight_distribution()
 
     @api_server.post('/terminate')
     def terminateRun():

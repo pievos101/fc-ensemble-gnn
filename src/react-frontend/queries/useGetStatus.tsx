@@ -5,7 +5,9 @@ export function useGetStatus() {
   const { error, isLoading, data, isError } = useQuery<{
     status: string,
     global_training_complete: boolean,
-    local_training_complete: boolean
+    local_training_complete: boolean,
+    weight_aggregation_ongoing: boolean,
+    global_weights_available: boolean,
     state?: string, // only available in FeatureCloud environment
     role: "client" | "coordinator"
   }>({
