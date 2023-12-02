@@ -117,10 +117,6 @@ def applyWebServerRoutes(server: Bottle, local_client: Client, global_client: Cl
         # if no weights are available, use neutral weights (1) for each classifier
         if len(global_client.weight_configuration) == 0:
             global_client.weight_configuration = [1] * len(global_client.ensemble.ensemble)
-
-        # TODO: remove this line, only for testing
-        # global_client.aggregated_weight_configuration = global_client.weight_configuration
-
         start_weight_distribution()
 
     @api_server.post('/terminate')

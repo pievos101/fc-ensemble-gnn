@@ -166,22 +166,33 @@ class Client:
     def savePerformanceToFile(self, output_dir_path: str = None, name: str = 'client_performance.txt'):
         # returns if the values have been successfully saved
         self.status = "Storing performance"
-        # Lets check the client-specific performances
-        if self.ensemble_validation_performance or output_dir_path or self.ensemble_test_performance is None:
-            return False
+        # check if the values are available
+        if output_dir_path is None:
+            raise Exception('No output directory specified')
 
-        # save the values to a file
-        with open(os.path.join(output_dir_path, name), 'w') as f:
-            f.write(f'Validation Set:\n')
-            f.write(f'Balanced accuracy of ensemble classifier: {self.ensemble_validation_performance.acc_bal}\n')
-            f.write(f'Accuracy of ensemble classifier: {self.ensemble_validation_performance.acc}\n')
-            f.write(f'NMI of ensemble classifier: {self.ensemble_validation_performance.nmi}\n')
-            f.write(f'\nTest Set:\n')
-            f.write(f'Balanced accuracy of ensemble classifier: {self.ensemble_test_performance.acc_bal}\n')
-            f.write(f'Accuracy of ensemble classifier: {self.ensemble_test_performance.acc}\n')
-            f.write(f'NMI of ensemble classifier: {self.ensemble_test_performance.nmi}\n')
+        # Define the directory
+        directory = os.path.join(output_dir_path, "analysis")
+
+        # Create the directory if it doesn't exist
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        with open(os.path.join(directory, name), 'w') as f:
+            if self.ensemble_validation_performance is not None:
+                f.write(f'Validation Set:\n')
+                f.write(f'Balanced accuracy of ensemble classifier: {self.ensemble_validation_performance.acc_bal}\n')
+                f.write(f'Accuracy of ensemble classifier: {self.ensemble_validation_performance.acc}\n')
+                f.write(f'NMI of ensemble classifier: {self.ensemble_validation_performance.nmi}\n')
+            if self.ensemble_test_performance is not None:
+                f.write(f'\nTest Set:\n')
+                f.write(f'Balanced accuracy of ensemble classifier: {self.ensemble_test_performance.acc_bal}\n')
+                f.write(f'Accuracy of ensemble classifier: {self.ensemble_test_performance.acc}\n')
+                f.write(f'NMI of ensemble classifier: {self.ensemble_test_performance.nmi}\n')
             f.write(f'\nWeights:\n')
             f.write(f'{self.weight_configuration}\n')
+            if self.aggregated_weight_configuration is not None:
+                f.write(f'\nAggregated Weights:\n')
+                f.write(f'{self.aggregated_weight_configuration}\n')
             f.close()
         self.status = "Performance saved"
         return True
