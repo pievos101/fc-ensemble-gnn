@@ -1,20 +1,18 @@
 import {
-    Accordion, AccordionDetails, AccordionSummary,
     Alert,
     Button,
-    FormControl, FormHelperText,
+    FormControl,
+    FormHelperText,
     InputLabel,
     MenuItem,
     Select,
     Stack,
     TextField,
-    Typography,
     useTheme
 } from "@mui/material";
 import React from "react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChevronDown, faSliders} from "@fortawesome/free-solid-svg-icons";
-import {ContentAccordion} from "./ContentAccordion";
+import { faSliders } from "@fortawesome/free-solid-svg-icons";
+import { ContentAccordion } from "./ContentAccordion";
 
 const MOCK_CONFIGS = [
     {
@@ -49,6 +47,10 @@ function ConfigurationSelect() {
     )
 }
 
+/**
+ * @deprecated
+ * NOTE: this was intended to enable data upload from the ui, but was not implemented
+ * */
 export function ConfigSection() {
     const theme = useTheme()
 

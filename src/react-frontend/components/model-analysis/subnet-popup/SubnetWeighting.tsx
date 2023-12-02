@@ -7,7 +7,7 @@ import {
   FormLabel,
   Radio,
   RadioGroup,
-  Stack,
+  Stack, TextField,
   Typography,
   useTheme
 } from "@mui/material";
@@ -45,7 +45,8 @@ function WeightSelect({ id }: { id: number }) {
             setWeight(id, parseFloat(e.target.value));
           }}
           style={{
-            flexDirection: "column"
+            flexDirection: "column",
+            marginBottom: theme.spacing(1)
           }}
         >
           <FormControlLabel value={0} control={<Radio />} label="Disable (x0)" />
@@ -53,6 +54,13 @@ function WeightSelect({ id }: { id: number }) {
           <FormControlLabel value={2} control={<Radio />} label="Small increase (x2)" />
           <FormControlLabel value={5} control={<Radio />} label="Large increase (x5)" />
         </RadioGroup>
+        {/*Add the weighting as input field*/}
+        <FormLabel id="demo-row-radio-buttons-group-label">Custom Weight</FormLabel>
+        <TextField value={weights[id]} onChange={(e) => setWeight(id, parseFloat(e.target.value))}
+                   onBlur={(e) => setWeight(id, parseFloat(e.target.value))} style={{ width: 80 }}
+                   size={"small"} type={"number"} inputMode={"numeric"}
+                   inputProps={{ min: 0 }}
+        />
       </FormControl>
     </Stack>
   );

@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getApiUrl } from "../App";
-import { useEffect, useMemo } from "react";
-import { useSettings } from "./useSettings";
+import { useMemo } from "react";
 
 export function useGetPerformance(opts: {
   isTestSet: boolean
@@ -10,7 +9,7 @@ export function useGetPerformance(opts: {
 }) {
   const key = `performance-${opts.isTestSet ? "test" : "validation"}-${opts.client}`;
 
-  const { error, isLoading, data, refetch } = useQuery<{
+  const { data, ...rest } = useQuery<{
     acc: number,
     acc_bal: number,
     nmi: number,
@@ -37,8 +36,7 @@ export function useGetPerformance(opts: {
   }), [data]);
 
   return {
-    isLoading,
-    stats,
-    refetch
+    ...rest,
+    stats
   };
 }

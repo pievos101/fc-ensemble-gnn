@@ -49,7 +49,7 @@ export function WeightingElement({ ensembleLength }: { ensembleLength: number })
   }, [aggregatedWeights, weights, setWeight]);
 
   return (
-    <Accordion elevation={2}>
+    <Accordion elevation={3} style={{ zIndex: 3 }}>
       <AccordionSummary
         expandIcon={<FontAwesomeIcon icon={faChevronDown} />}
         aria-controls="panel1a-content"

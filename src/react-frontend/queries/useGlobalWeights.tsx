@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getApiUrl } from "../App";
 import { useGetStatus } from "./useGetStatus";
-import { useSettings } from "./useSettings";
 import { useEffect } from "react";
 
 export function useGlobalWeights() {

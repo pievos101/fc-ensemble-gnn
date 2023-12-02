@@ -54,6 +54,10 @@ function FileElement({label, onSelected}: FileSelectorProps) {
     )
 }
 
+/**
+ * @deprecated
+ * NOTE: this was intended to enable data upload from the ui, but was not implemented
+ * */
 export function InputSection() {
     const [mRNAFile, setMRNAFile] = useState<File | undefined>(undefined)
     const [ppiFile, setPpiFile] = useState<File | undefined>(undefined)

@@ -84,7 +84,7 @@ export function StatsElement({ ensembleLength }: { ensembleLength: number }) {
 
   useEffect(() => {
     if (ensembleLength > 0) void fetchValidationStats();
-  }, [ensembleLength]);
+  }, [ensembleLength, fetchValidationStats]);
 
   useEffect(() => {
     // always refetch when weights change to get new score
@@ -98,7 +98,7 @@ export function StatsElement({ ensembleLength }: { ensembleLength: number }) {
   };
 
   return (
-    <Accordion elevation={2} defaultExpanded>
+    <Accordion elevation={3} defaultExpanded style={{ zIndex: 3 }}>
       <AccordionSummary
         expandIcon={<FontAwesomeIcon icon={faChevronDown} />}
         aria-controls="panel1a-content"

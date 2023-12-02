@@ -1,9 +1,9 @@
 import { TGraph } from "../../queries/useGetGraphs";
 import React, { useMemo, useState } from "react";
 import { SubnetPopup } from "./subnet-popup/SubnetPopup";
-import { Card, Chip, Palette, Stack, Typography, useTheme } from "@mui/material";
+import { Card, Chip, Stack, Typography, useTheme } from "@mui/material";
 import { useSettings } from "../../queries/useSettings";
-import { faBan, faCaretDown, faCaretUp, faMinus, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faBan, faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Weighting({ weight }: { weight: number }) {

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getApiUrl } from "../App";
 
 export function useGetStatus() {
-  const { error, isLoading, data, isError } = useQuery<{
+  const { isLoading, data, ...rest } = useQuery<{
     status: string,
     global_training_complete: boolean,
     local_training_complete: boolean,
@@ -20,8 +20,8 @@ export function useGetStatus() {
   });
 
   return {
+    ...rest,
     status: data?.state ?? "unknown",
-    error,
     loading: isLoading,
     data
   };

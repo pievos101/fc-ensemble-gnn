@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getApiUrl } from "../App";
-import { useEffect, useMemo } from "react";
-import { useSettings } from "./useSettings";
+import { useMemo } from "react";
 
 export type TGraph = {
   id: number,

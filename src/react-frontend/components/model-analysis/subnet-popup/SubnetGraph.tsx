@@ -1,13 +1,8 @@
 import { TGraph } from "../../../queries/useGetGraphs";
-import { Alert, AlertTitle, Snackbar, SnackbarOrigin, Typography, useTheme } from "@mui/material";
+import { Alert, AlertTitle, Snackbar, Typography, useTheme } from "@mui/material";
 import React, { useMemo, useState } from "react";
 import { GraphCanvas } from "reagraph";
 
-function ensureWeightIsAboveThreshold(weight: number, threshold: number = 0.1) {
-  // return with threshold to ensure UI elements are not too small;
-  return weight;
-  return weight < threshold ? threshold + weight : weight;
-}
 
 interface SnackbarCall {
   type: "Edge" | "Node";
@@ -24,7 +19,7 @@ export function SubnetGraph({ ensemble }: { ensemble: TGraph }) {
         id: it.name,
         label: it.name,
         data: {
-          weight: ensureWeightIsAboveThreshold(it.weight),
+          weight: it.weight,
           weight_unscaled: it.weight
         }
       }))
@@ -36,10 +31,10 @@ export function SubnetGraph({ ensemble }: { ensemble: TGraph }) {
         source: it.source,
         target: it.target,
         data: {
-          weight: ensureWeightIsAboveThreshold(it.weight * 10, 0.1),
+          weight: it.weight * 10,
           weight_unscaled: it.weight
         },
-        size: ensureWeightIsAboveThreshold(it.weight * 10, 0.1)
+        size: it.weight * 10
       }))
     , [ensemble.edges]);
 
